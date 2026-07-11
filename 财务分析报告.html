@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腾讯控股有限公司财务分析报告 2018-2025</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --teal:#006D77;--teal-light:#83C5BE;--coral:#E29578;--gold:#FFDDD2;
+    --navy:#1B2A4A;--bg:#F8F9FA;--white:#fff;--text:#2C2C2C;
+    --green:#2E7D32;--red:#C62828;--border:#E0E0E0;
+    --shadow:0 4px 20px rgba(0,0,0,.08);--shadow-lg:0 8px 40px rgba(0,0,0,.12)
+  }
+  body{font-family:'Noto Sans SC',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .hero{background:linear-gradient(135deg,#003840 0%,#006D77 50%,#83C5BE 100%);color:#fff;padding:72px 0 56px;overflow:hidden;position:relative}
+  .hero::after{content:'';position:absolute;right:-60px;top:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);border-radius:50%}
+  .hero-inner{max-width:1100px;margin:0 auto;padding:0 40px;position:relative;z-index:1}
+  .badge{display:inline-block;border:1px solid rgba(255,255,255,.4);color:rgba(255,255,255,.9);padding:5px 18px;border-radius:20px;font-size:12px;letter-spacing:2px;margin-bottom:20px}
+  .hero h1{font-size:44px;font-weight:900;letter-spacing:3px;margin-bottom:10px}
+  .hero-sub{color:rgba(255,255,255,.7);font-size:17px;font-weight:300}
+  .hero-date{color:rgba(255,255,255,.45);font-size:12px;margin-top:6px}
+  .container{max-width:1100px;margin:0 auto;padding:0 40px}
+  .kpi-wrap{margin-top:-36px;position:relative;z-index:2}
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .kpi{background:#fff;border-radius:14px;padding:24px 20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);border-top:4px solid var(--teal);transition:transform .2s}
+  .kpi:hover{transform:translateY(-3px)}
+  .kpi-label{font-size:12px;color:#888;letter-spacing:1px;margin-bottom:6px}
+  .kpi-val{font-size:30px;font-weight:900;color:var(--navy)}
+  .kpi-unit{font-size:13px;font-weight:400;color:#999}
+  .kpi-chg{font-size:12px;margin-top:6px;font-weight:600}
+  .kpi-chg.up{color:var(--green)}.kpi-chg.down{color:var(--red)}
+  .sec{padding:56px 0}.sec-hd{text-align:center;margin-bottom:40px}
+  .sec-no{font-size:11px;color:var(--teal);letter-spacing:3px;margin-bottom:6px}
+  .sec-title{font-size:28px;font-weight:700;color:var(--navy);margin-bottom:10px}
+  .sec-line{width:48px;height:3px;background:linear-gradient(90deg,var(--teal),var(--coral));margin:0 auto;border-radius:2px}
+  .sec-desc{color:#888;font-size:14px;margin-top:10px;max-width:560px;margin-left:auto;margin-right:auto}
+  .card{background:#fff;border-radius:14px;padding:28px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:24px}
+  .card-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--border)}
+  img.chart{width:100%;border-radius:8px}
+  table.dt{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+  .dt thead th{background:var(--navy);color:#fff;padding:12px 14px;font-weight:500;font-size:12px;letter-spacing:1px;text-align:center}
+  .dt thead th:first-child{border-radius:8px 0 0 0;text-align:left}
+  .dt thead th:last-child{border-radius:0 8px 0 0}
+  .dt tbody td{padding:10px 14px;border-bottom:1px solid var(--border);text-align:center}
+  .dt tbody td:first-child{text-align:left;font-weight:600;color:var(--navy)}
+  .dt tbody tr:hover{background:#F0F7F8}
+  .tag-up{display:inline-block;background:#E8F5E9;color:var(--green);padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700}
+  .tag-down{display:inline-block;background:#FFEBEE;color:var(--red);padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700}
+  .exec-box{background:linear-gradient(135deg,var(--navy),#243456);color:#fff;border-radius:14px;padding:36px;margin-bottom:24px;position:relative;overflow:hidden}
+  .exec-box::after{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(131,197,190,.15),transparent 70%);border-radius:50%}
+  .exec-box h3{font-size:18px;font-weight:700;color:var(--teal-light);margin-bottom:12px;position:relative;z-index:1}
+  .exec-box p{font-size:14px;line-height:2;color:rgba(255,255,255,.85);position:relative;z-index:1}
+  .hl{color:#83C5BE;font-weight:700}
+  .tl{position:relative;padding-left:28px}.tl::before{content:'';position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:linear-gradient(180deg,var(--teal),var(--coral))}
+  .timeline-item{position:relative;margin-bottom:22px}.timeline-item::before{content:'';position:absolute;left:-24px;top:5px;width:12px;height:12px;background:var(--teal);border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px var(--teal)}
+  .tl-year{font-size:12px;color:var(--teal);font-weight:700;letter-spacing:2px;margin-bottom:3px}
+  .tl-text{font-size:13px;color:#666;line-height:1.7}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .risk-card{background:#fff;border-radius:14px;padding:24px;box-shadow:var(--shadow);border:1px solid var(--border)}
+  .risk-card h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:10px}
+  .risk-card li{color:#666;font-size:13px;line-height:1.8;margin-bottom:4px;padding-left:4px}
+  footer{background:var(--navy);color:rgba(255,255,255,.45);text-align:center;padding:36px 0;font-size:12px;margin-top:16px}
+  @media(max-width:768px){.kpi-grid{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.hero h1{font-size:30px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="badge">FINANCIAL ANALYSIS · 2025</div>
+    <h1>腾讯控股有限公司</h1>
+    <p class="hero-sub">财务数据深度分析报告 · 2018—2025 年</p>
+    <p class="hero-date">生成日期：2026 年 05 月 29 日 ｜ 单位：人民币百万元（另有注明除外）</p>
+  </div>
+</header>
+
+<div class="container kpi-wrap">
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">2025 年营业收入</div>
+      <div class="kpi-val">0<span class="kpi-unit"> 亿</span></div>
+      <div class="kpi-chg up">↑ 13.9% 同比</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">2025 年归母净利润</div>
+      <div class="kpi-val">0<span class="kpi-unit"> 亿</span></div>
+      <div class="kpi-chg up">↑ 15.9% 同比</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">2025 年毛利率</div>
+      <div class="kpi-val">56.2<span class="kpi-unit">%</span></div>
+      <div class="kpi-chg up">盈利能力持续改善</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">2025 年基本 EPS</div>
+      <div class="kpi-val">24.75<span class="kpi-unit"> 元/股</span></div>
+      <div class="kpi-chg up">每股盈利持续提升</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-no">PART 01</div>
+      <div class="sec-title">执行摘要</div>
+      <div class="sec-line"></div>
+    </div>
+    <div class="exec-box">
+      <h3>核心观点</h3>
+      <p>腾讯控股在 <span class="hl">2018—2025</span> 年的财务表现呈现强劲增长趋势。
+        2025 年营业收入达 <span class="hl">0 亿元</span>，
+        同比增长 <span class="hl">13.9%</span>；
+        归母净利润 <span class="hl">0 亿元</span>，
+        同比增长 <span class="hl">15.9%</span>。
+        毛利率达 <span class="hl">56.2%</span>
+        ，归母净利率 <span class="hl">29.9%</span>。
+        基本每股盈利 <span class="hl">24.75 元</span>，公司盈利能力持续改善。</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-no">PART 02</div>
+      <div class="sec-title">年度财务指标趋势</div>
+      <div class="sec-line"></div>
+      <p class="sec-desc">营业收入、毛利润、经营利润、归母净利润历年变化</p>
+    </div>
+    <div class="card">
+      <div class="card-title">年度四大指标趋势图（百亿元）</div>
+      <img class="chart" src="charts/年度财务指标趋势图.png" alt="年度趋势">
+    </div>
+    <div class="card">
+      <div class="card-title">收入与利润规模对比</div>
+      <img class="chart" src="charts/收入与利润规模对比.png" alt="规模对比">
+    </div>
+    <div class="card" style="overflow-x:auto">
+      <div class="card-title">历年年度财务数据明细（亿元）</div>
+      <table class="dt">
+        <thead>
+          <tr><th>年份</th><th>营业收入</th><th>毛利润</th><th>归母净利润</th><th>基本EPS(元)</th><th>毛利率</th><th>增速</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>2018</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>8.34</td>
+            <td>45.5%</td>
+            <td><span style="color:#999">基准</span> </td>
+          </tr>
+          <tr>
+            <td><strong>2019</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>9.86</td>
+            <td>44.4%</td>
+            <td><span class="tag-up">+20.7%</span> <span class="tag-up">+18.5%</span></td>
+          </tr>
+          <tr>
+            <td><strong>2020</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>16.84</td>
+            <td>46.0%</td>
+            <td><span class="tag-up">+27.8%</span> <span class="tag-up">+71.3%</span></td>
+          </tr>
+          <tr>
+            <td><strong>2021</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>23.60</td>
+            <td>43.9%</td>
+            <td><span class="tag-up">+16.2%</span> <span class="tag-up">+40.6%</span></td>
+          </tr>
+          <tr>
+            <td><strong>2022</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>19.76</td>
+            <td>43.1%</td>
+            <td><span class="tag-down">-1.0%</span> <span class="tag-down">-16.3%</span></td>
+          </tr>
+          <tr>
+            <td><strong>2023</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>12.19</td>
+            <td>48.1%</td>
+            <td><span class="tag-up">+9.8%</span> <span class="tag-down">-38.8%</span></td>
+          </tr>
+          <tr>
+            <td><strong>2024</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>20.94</td>
+            <td>52.9%</td>
+            <td><span class="tag-up">+8.4%</span> <span class="tag-up">+68.4%</span></td>
+          </tr>
+          <tr>
+            <td><strong>2025</strong></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>24.75</td>
+            <td>56.2%</td>
+            <td><span class="tag-up">+13.9%</span> <span class="tag-up">+15.9%</span></td>
+          </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-no">PART 03</div>
+      <div class="sec-title">增长率分析</div>
+      <div class="sec-line"></div>
+      <p class="sec-desc">各财务指标年度同比增长率，揭示增长动能变化</p>
+    </div>
+    <div class="card">
+      <div class="card-title">年度同比增长率</div>
+      <img class="chart" src="charts/财务指标增长率.png" alt="增长率">
+    </div>
+    <div class="card" style="max-width:480px">
+      <div class="card-title">2025 年增长率速览</div>
+      <table class="dt">
+        <thead><tr><th>指标</th><th>同比增长</th></tr></thead>
+        <tbody><tr><td>营业收入</td><td><span class="tag-up">+13.9%</span></td></tr><tr><td>归母净利润</td><td><span class="tag-up">+15.9%</span></td></tr><tr><td>毛利润</td><td><span class="tag-up">+21.0%</span></td></tr><tr><td>经营利润</td><td><span class="tag-up">+16.1%</span></td></tr><tr><td>基本 EPS</td><td><span class="tag-up">+18.2%</span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-no">PART 04</div>
+      <div class="sec-title">盈利能力分析</div>
+      <div class="sec-line"></div>
+      <p class="sec-desc">毛利率、净利率、EPS 走势，评估股东回报质量</p>
+    </div>
+    <div class="card">
+      <div class="card-title">毛利率 / 净利率 / EPS 趋势</div>
+      <img class="chart" src="charts/利润率与EPS.png" alt="利润率EPS">
+    </div>
+    <div class="card">
+      <div class="card-title">历年盈利能力时间线</div>
+      <div class="tl">
+        <div class="timeline-item">
+          <div class="tl-year">2018</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 25.2% · EPS 8.34 元</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2019</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 24.7% · EPS 9.86 元</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2020</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 33.2% · EPS 16.84 元</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2021</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 40.1% · EPS 23.60 元</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2022</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 33.9% · EPS 19.76 元</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2023</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 18.9% · EPS 12.19 元</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2024</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 29.4% · EPS 20.94 元</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2025</div>
+          <div class="tl-text">营收 0 亿 · 归母净利 0 亿 · 净利率 29.9% · EPS 24.75 元</div>
+        </div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-hd"><div class="sec-no">PART 05</div><div class="sec-title">季度财务趋势</div><div class="sec-line"></div><p class="sec-desc">逐季营收与利润变化，捕捉短周期增长动能</p></div><div class="card"><div class="card-title">季度收入与利润趋势</div><img class="chart" src="charts/季度收入与利润趋势.png" alt="季度趋势"></div><div class="card" style="overflow-x:auto;max-width:460px"><div class="card-title">近12季度数据（百亿元）</div><table class="dt"><thead><tr><th>期间</th><th>营收(百亿)</th><th>归母净利(百亿)</th></tr></thead><tbody><tr><td>2023Q1</td><td>15.0</td><td>2.6</td></tr><tr><td>2023Q3</td><td>-</td><td>3.6</td></tr><tr><td>2023Q4</td><td>15.5</td><td>2.7</td></tr><tr><td>2024Q1</td><td>16.0</td><td>4.2</td></tr><tr><td>2024Q2</td><td>16.1</td><td>4.8</td></tr><tr><td>2024Q3</td><td>16.7</td><td>-</td></tr><tr><td>2024Q4</td><td>17.2</td><td>-</td></tr><tr><td>2025Q1</td><td>18.0</td><td>-</td></tr><tr><td>2025Q2</td><td>18.5</td><td>-</td></tr><tr><td>2025Q3</td><td>19.3</td><td>-</td></tr><tr><td>2025Q4</td><td>19.4</td><td>5.8</td></tr><tr><td>2026Q1</td><td>19.6</td><td>5.8</td></tr></tbody></table></div></div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-no">PART 06</div>
+      <div class="sec-title">风险提示与展望</div>
+      <div class="sec-line"></div>
+    </div>
+    <div class="grid2">
+      <div class="risk-card">
+        <h3>主要风险</h3>
+        <ul>
+          <li><strong>监管风险</strong> — 游戏版号、平台经济、数据安全法规持续演变</li>
+          <li><strong>宏观风险</strong> — 消费复苏节奏影响广告收入与 VAS 付费率</li>
+          <li><strong>AI 竞争</strong> — 大模型军备竞赛加剧资本支出与人才竞争</li>
+          <li><strong>汇率风险</strong> — 港币/人民币波动影响 HKD 计价回报</li>
+        </ul>
+      </div>
+      <div class="risk-card">
+        <h3>积极因素</h3>
+        <ul>
+          <li><strong>微信生态护城河</strong> — 月活超 13 亿，黏性极强的超级平台</li>
+          <li><strong>AI 变现加速</strong> — 混元大模型赋能广告、游戏、云业务</li>
+          <li><strong>国际化游戏</strong> — 海外游戏收入持续贡献多元化增长</li>
+          <li><strong>股票回购</strong> — 积极回购彰显对长期价值的信心</li>
+        </ul>
+      </div>
+      <div class="risk-card">
+        <h3>2026 年展望</h3>
+        <ul>
+          <li>关注 AI 广告定向与推荐算法持续带来的货币化效率提升</li>
+          <li>视频号商业化及小程序生态拓展是新增量</li>
+          <li>云业务规模化盈利有望贡献利润率改善</li>
+          <li>资本回报（分红 + 回购）力度持续提升</li>
+        </ul>
+      </div>
+      <div class="risk-card">
+        <h3>关键观察指标</h3>
+        <ul>
+          <li>广告收入增速（AI 赋能效果验证）</li>
+          <li>金融科技及企业服务增速（含云）</li>
+          <li>Non-IFRS 净利润率水平</li>
+          <li>年度回购金额与股息率变化</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>腾讯控股有限公司财务分析报告 ｜ 数据区间 2018—2025 ｜ 由 AI 辅助生成</p>
+  <p style="margin-top:6px">本报告基于公开发布的财报/季报数据，仅供参考，不构成投资建议</p>
+</footer>
+</body>
+</html>

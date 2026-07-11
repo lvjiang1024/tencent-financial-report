@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腾讯控股 财务分析报告 2004-2025</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root { --teal:#006D77; --teal-light:#83C5BE; --coral:#E29578; --gold:#FFDDD2; --navy:#1B2A4A; --slate:#243456; --bg:#F5F8F8; --white:#FFF; --text:#1F2937; --text-secondary:#5B6B76; --green:#2E7D32; --red:#C62828; --border:#DCE6E6; }
+  body { font-family:'Noto Sans SC',-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.8; }
+  .hero { background:linear-gradient(135deg,#003840,#006D77 55%,#0B4F58); color:#fff; padding:60px 0 40px; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle at 30% 50%,rgba(131,197,190,.10) 0%,transparent 50%),radial-gradient(circle at 70% 30%,rgba(226,149,120,.08) 0%,transparent 50%); }
+  .hero h1 { font-size:40px; font-weight:900; letter-spacing:3px; position:relative; z-index:1; background:linear-gradient(180deg,#fff,#83C5BE); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero .sub { color:rgba(255,255,255,.55); font-size:14px; position:relative; z-index:1; margin-top:8px; }
+  .kpi-row { max-width:1100px; margin:-30px auto 0; padding:0 20px; position:relative; z-index:2; display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  .kpi-card { background:var(--white); border-radius:14px; padding:22px 18px; box-shadow:0 8px 32px rgba(0,60,64,.12); border:1px solid var(--border); text-align:center; transition:transform .2s; border-top:4px solid var(--teal); }
+  .kpi-card:hover { transform:translateY(-3px); }
+  .kpi-card .label { font-size:12px; color:var(--text-secondary); letter-spacing:1px; }
+  .kpi-card .value { font-size:27px; font-weight:900; color:var(--navy); margin:4px 0; }
+  .kpi-card .unit { font-size:13px; color:var(--text-secondary); font-weight:400; }
+  .kpi-card .change { font-size:12px; margin-top:4px; font-weight:600; }
+  .down { color:var(--red); } .up { color:var(--green); }
+  .nav-bar { max-width:1100px; margin:30px auto 0; padding:0 20px; display:flex; gap:4px; flex-wrap:wrap; justify-content:center; }
+  .nav-bar button { background:var(--white); border:1px solid var(--border); padding:10px 18px; border-radius:10px; cursor:pointer; font-size:13px; font-family:inherit; color:var(--text-secondary); transition:all .2s; }
+  .nav-bar button:hover { border-color:var(--teal); color:var(--navy); }
+  .nav-bar button.active { background:var(--navy); color:#fff; border-color:var(--navy); }
+  .section { display:none; max-width:1100px; margin:0 auto; padding:30px 20px; }
+  .section.active { display:block; }
+  .chart-block { background:var(--white); border-radius:14px; padding:24px; box-shadow:0 4px 20px rgba(0,60,64,.06); border:1px solid var(--border); margin-bottom:20px; }
+  .chart-block h3 { font-size:16px; color:var(--navy); margin-bottom:16px; }
+  .chart-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
+  .chart-row.single { grid-template-columns:1fr; }
+  .chart-row canvas { width:100% !important; max-height:380px; }
+  .chart-row.full canvas { max-height:400px; }
+  .data-table { width:100%; border-collapse:separate; border-spacing:0; font-size:12px; }
+  .data-table thead th { background:var(--navy); color:#fff; padding:10px 10px; font-weight:500; font-size:11px; letter-spacing:.5px; text-align:center; position:sticky; top:0; z-index:1; }
+  .data-table thead th:first-child { border-radius:10px 0 0 0; }
+  .data-table thead th:last-child { border-radius:0 10px 0 0; }
+  .data-table tbody td { padding:8px 10px; border-bottom:1px solid var(--border); text-align:center; }
+  .data-table tbody td:first-child { text-align:left; font-weight:600; color:var(--navy); }
+  .data-table tbody tr:hover { background:#EAF4F3; }
+  .table-scroll { max-height:600px; overflow-y:auto; border-radius:10px; }
+  .tag-down { background:#FDE8EC; color:var(--red); padding:2px 6px; border-radius:8px; font-size:10px; font-weight:600; }
+  .tag-up { background:#E8F5E9; color:var(--green); padding:2px 6px; border-radius:8px; font-size:10px; font-weight:600; }
+  .tag-src { background:#E3F2FD; color:#1565C0; padding:2px 6px; border-radius:8px; font-size:10px; }
+  .summary-box { background:linear-gradient(135deg,var(--navy),var(--slate)); color:#fff; border-radius:14px; padding:30px; margin-bottom:20px; }
+  .summary-box h3 { color:var(--teal-light); margin-bottom:12px; font-size:18px; }
+  .summary-box p { color:rgba(255,255,255,.85); font-size:14px; line-height:2; }
+  .summary-box .hl { color:var(--teal-light); font-weight:600; }
+  .stats-grid { max-width:1100px; margin:20px auto 0; padding:0 20px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .stat-card { background:var(--white); border-radius:10px; padding:16px; text-align:center; border:1px solid var(--border); }
+  .stat-card .n { font-size:24px; font-weight:900; color:var(--navy); }
+  .stat-card .l { font-size:11px; color:var(--text-secondary); }
+  .footer { text-align:center; padding:30px; color:var(--text-secondary); font-size:12px; }
+  @media(max-width:768px){ .kpi-row{grid-template-columns:1fr 1fr;} .chart-row{grid-template-columns:1fr;} .hero h1{font-size:26px;} .stats-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:1024px) and (min-width:769px){ .kpi-row{grid-template-columns:repeat(3,1fr);} }
+
+  .mgmt-filters { max-width:1100px; margin:0 auto 20px; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .mgmt-filter { background:var(--white); border:1px solid var(--border); padding:6px 14px; border-radius:8px; cursor:pointer; font-size:12px; font-family:inherit; color:var(--text-secondary); transition:all .2s; }
+  .mgmt-filter:hover { border-color:var(--teal); }
+  .mgmt-filter.active { background:var(--navy); color:#fff; border-color:var(--navy); }
+  #mgmt-search { padding:6px 14px; border:1px solid var(--border); border-radius:8px; font-size:12px; font-family:inherit; width:200px; margin-left:auto; }
+  .mgmt-timeline { max-width:1100px; margin:0 auto; padding:0 20px; }
+  .mgmt-year-block { margin-bottom:24px; }
+  .mgmt-year-header { background:linear-gradient(135deg,var(--navy),var(--slate)); color:#fff; padding:14px 20px; border-radius:12px 12px 0 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .mgmt-year-header .year { font-size:20px; font-weight:700; color:var(--teal-light); }
+  .mgmt-year-header .title { font-size:13px; color:rgba(255,255,255,.7); }
+  .mgmt-year-header .toggle { font-size:18px; transition:transform .2s; }
+  .mgmt-year-body { background:var(--white); border:1px solid var(--border); border-top:none; border-radius:0 0 12px 12px; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .mgmt-year-body.collapsed { display:none; }
+  .mgmt-dim { padding:12px; border-radius:8px; }
+  .mgmt-dim.highlights { background:#E6F5F3; border-left:3px solid var(--teal); }
+  .mgmt-dim.market { background:#E3F2FD; border-left:3px solid #1565C0; }
+  .mgmt-dim.outlook { background:#E8F5E9; border-left:3px solid var(--green); }
+  .mgmt-dim.risks { background:#FDE8EC; border-left:3px solid var(--red); }
+  .mgmt-dim h4 { font-size:13px; margin-bottom:8px; color:var(--navy); }
+  .mgmt-dim li { font-size:13px; line-height:1.8; color:var(--text); margin-bottom:4px; padding-left:4px; }
+  .mgmt-dim li.hidden { display:none; }
+  .mgmt-dim li.match { background:#FFEB3B40; border-radius:4px; padding:2px 6px; }
+  @media(max-width:768px){ .mgmt-year-body { grid-template-columns:1fr; } .mgmt-filters { flex-direction:column; } #mgmt-search { width:100%; margin-left:0; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>腾讯控股 财务分析报告</h1>
+  <div class="sub">2004—2025 跨越 22 年上市历程 ｜ 官方年报 / 中期 / 季度业绩公告 ｜ 生成日期：2026-07-10</div>
+</header>
+
+<div class="kpi-row">
+  <div class="kpi-card"><div class="label">2025年 营业收入</div><div class="value">7,518<span class="unit"> 亿</span></div><div class="change up">↑ 13.9%</div></div>
+  <div class="kpi-card"><div class="label">2025年 归母净利润</div><div class="value">2,248<span class="unit"> 亿</span></div><div class="change up">↑ 15.9%</div></div>
+  <div class="kpi-card"><div class="label">2025年 Non-GAAP归母净利润</div><div class="value">2,596<span class="unit"> 亿</span></div><div class="change" style="color:var(--text-secondary)">剔除股份酬金/减值等口径</div></div>
+  <div class="kpi-card"><div class="label">2025年 总资产</div><div class="value">20,390<span class="unit"> 亿</span></div><div class="change" style="color:var(--text-secondary)">净资产 11,542 亿</div></div>
+  <div class="kpi-card"><div class="label">2025年 ROE（估算）</div><div class="value">21.1<span class="unit">%</span></div><div class="change down">↓ 0.7pp</div></div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card"><div class="n">22年</div><div class="l">数据跨度（2004上市至今）</div></div>
+  <div class="stat-card"><div class="n">22年</div><div class="l">完整年报数据</div></div>
+  <div class="stat-card"><div class="n">70+份</div><div class="l">PDF 财报</div></div>
+  <div class="stat-card"><div class="n">657.1倍</div><div class="l">营收增长（2004→2025）</div></div>
+</div>
+
+<div class="nav-bar">
+  <button class="active" id="btn-overview">📈 22年全景</button>
+  <button id="btn-core">📊 核心指标</button>
+  <button id="btn-revenue">💼 收入结构</button>
+  <button id="btn-returns">💎 股东回报</button>
+  <button id="btn-growth">🚀 增长分析</button>
+  <button id="btn-quality">💰 利润质量</button>
+  <button id="btn-cashflow">🌊 现金流</button>
+  <button id="btn-quarterly">📅 季度追踪</button>
+  <button id="btn-detail">📋 数据明细</button>
+  <button id="btn-mgmt">💬 管理层观点</button>
+</div>
+
+<div class="section active" id="sec-overview">
+  <div class="summary-box"><h3>📌 22年增长传奇</h3><p>腾讯控股自 2004 年在香港联交所主板上市以来，营业收入从 <span class="hl">11.4 亿元</span> 增长至 2025 年的 <span class="hl">7,518 亿元</span>，增长约 <span class="hl">657.1 倍</span>；归母净利润从 <span class="hl">4.4 亿元</span> 增长至 <span class="hl">2,248 亿元</span>。期间经历了2004-2010门户与增值服务黄金期、2011微信诞生开启移动互联网时代、2014京东换股完成电商转型、2018组织架构"930变革"、2021-2022反垄断监管与降本增效、2023-2025视频号与AI驱动的新一轮增长周期。</p></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>营业收入：22年增长曲线（2004—2025，亿元）</h3><canvas id="chart_rev22"></canvas></div></div>
+  <div class="chart-row">
+    <div class="chart-block"><h3>营收同比增速（%）</h3><canvas id="chart_revg"></canvas></div>
+    <div class="chart-block"><h3>归母净利润趋势（2004—2025，亿元）</h3><canvas id="chart_profit"></canvas></div>
+  </div>
+</div>
+
+<div class="section" id="sec-core">
+  <div class="chart-row"><div class="chart-block"><h3>营业收入（亿元）</h3><canvas id="chart_rev_core"></canvas></div><div class="chart-block"><h3>归母净利润（亿元）</h3><canvas id="chart_profit_core"></canvas></div></div>
+  <div class="chart-row"><div class="chart-block"><h3>总资产 vs 归母净资产（亿元）</h3><canvas id="chart_ae"></canvas></div><div class="chart-block"><h3>资产负债率 & ROA（%，估算）</h3><canvas id="chart_dar"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-revenue">
+  <div class="summary-box"><h3>📌 收入结构 22 年变迁</h3><p>腾讯的收入引擎经历了三次切换：上市初期靠<span class="hl">移动增值服务（SP业务）</span>；2006 年起 <span class="hl">互联网增值服务（游戏+社交）</span>接棒成为绝对主力，占比一度超过 80%；2019 年单独披露的 <span class="hl">金融科技及企业服务</span> 已成长为第二大分部（2025 年占比约 31%），叠加广告（营销服务）复苏，收入结构显著多元化。注：2004—2012 年"增值服务"为 IVAS+MVAS 合并口径，与 2013 年后可比；2013—2014 年含电商分部（后并入京东）。</p></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>分部收入堆叠（2004—2025，亿元）</h3><canvas id="chart_seg_abs"></canvas></div></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>分部收入占比（2004—2025，%）</h3><canvas id="chart_seg_pct"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-returns">
+  <div class="chart-row"><div class="chart-block"><h3>每股收益 EPS（元，已按2014年5股拆1股调整）</h3><canvas id="chart_eps"></canvas></div><div class="chart-block"><h3>净资产收益率 ROE（%，估算＝归母净利润/期初期末净资产均值）</h3><canvas id="chart_roe"></canvas></div></div>
+  <div class="chart-row"><div class="chart-block"><h3>末期股息 DPS（港元/股，2013年前已按拆股调整；2008/2013含特别股息）</h3><canvas id="chart_dps"></canvas></div><div class="chart-block"><h3>ROE vs 归母净利率 双轴对比（%）</h3><canvas id="chart_roe_npm"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-growth">
+  <div class="chart-row"><div class="chart-block"><h3>营收 & 归母净利润 同比增速（%）</h3><canvas id="chart_rpg"></canvas></div><div class="chart-block"><h3>毛利率 & 归母净利率走势（%）</h3><canvas id="chart_margin"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-quality">
+  <div class="chart-row single full"><div class="chart-block"><h3>IFRS 归母净利润 vs Non-GAAP 归母净利润（亿元，2011年起披露）</h3><canvas id="chart_ifrs_nifrs"></canvas></div></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>IFRS 经营利润 vs Non-GAAP 经营利润（亿元；2019-2022 为重列口径，剔除投资相关损益）</h3><canvas id="chart_op_cmp"></canvas></div></div>
+  <div class="chart-row"><div class="chart-block"><h3>经营利润（IFRS，亿元）</h3><canvas id="chart_op"></canvas></div><div class="chart-block"><h3>毛利润（亿元）</h3><canvas id="chart_gross"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-cashflow">
+  <div class="summary-box"><h3>📌 现金流与资本开支</h3><p>自由现金流（FCF）为公司自行披露口径：经营活动现金流减去资本开支、媒体内容开支及租赁负债付款。年度 FCF 为四个季度加总（估算）。<span class="hl">2024 年起资本开支跳升至 768 亿元、2025 年达 792 亿元</span>，主要投向 AI 算力与数据中心基础设施——这是当前腾讯财务叙事的核心变量：Capex 高企但核心业务现金创造能力仍在增强。</p></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>季度自由现金流 & 资本开支（2019Q1—2026Q1，亿元）</h3><canvas id="chart_fc_q"></canvas></div></div>
+  <div class="chart-row"><div class="chart-block"><h3>年度自由现金流 vs 归母净利润（亿元，FCF为四季加总估算）</h3><canvas id="chart_fcf_np"></canvas></div><div class="chart-block"><h3>年度资本开支（亿元，官方全年披露值）</h3><canvas id="chart_capex_fy"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-quarterly">
+  <div class="chart-row single full"><div class="chart-block"><h3>季度营收追踪（2019—2026，亿元）</h3><canvas id="chart_q_rev"></canvas></div></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>季度归母净利润追踪（IFRS，亿元；Q2 由中期报减一季报推算）</h3><canvas id="chart_q_attr"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-detail">
+  <div class="chart-block"><h3>📋 全部年报数据（2004—2025，亿元/元）</h3><div class="table-scroll"><table class="data-table"><thead><tr><th>年份</th><th>营业收入</th><th>毛利润</th><th>经营利润</th><th>归母净利润</th><th>Non-GAAP归母净利</th><th>基本EPS(元)</th><th>总资产</th><th>归母净资产</th><th>ROE(估算)</th><th>同比</th></tr></thead><tbody>
+      <tr>
+        <td>2004</td>
+        <td>11</td>
+        <td>7</td>
+        <td>5</td>
+        <td>4</td>
+        <td>—</td>
+        <td>0.058</td>
+        <td>29</td>
+        <td>27</td>
+        <td>16.6%</td>
+        <td><span style="color:#999">基准年</span></td>
+      </tr>
+      <tr>
+        <td>2005</td>
+        <td>14</td>
+        <td>10</td>
+        <td>5</td>
+        <td>5</td>
+        <td>—</td>
+        <td>0.055</td>
+        <td>34</td>
+        <td>29</td>
+        <td>17.4%</td>
+        <td><span class="tag-up">营收+24.7%</span> <span class="tag-up">净利+10.0%</span></td>
+      </tr>
+      <tr>
+        <td>2006</td>
+        <td>28</td>
+        <td>20</td>
+        <td>12</td>
+        <td>11</td>
+        <td>—</td>
+        <td>0.121</td>
+        <td>47</td>
+        <td>37</td>
+        <td>32.0%</td>
+        <td><span class="tag-up">营收+96.4%</span> <span class="tag-up">净利+119.4%</span></td>
+      </tr>
+      <tr>
+        <td>2007</td>
+        <td>38</td>
+        <td>27</td>
+        <td>16</td>
+        <td>16</td>
+        <td>—</td>
+        <td>0.176</td>
+        <td>69</td>
+        <td>52</td>
+        <td>35.2%</td>
+        <td><span class="tag-up">营收+36.5%</span> <span class="tag-up">净利+47.2%</span></td>
+      </tr>
+      <tr>
+        <td>2008</td>
+        <td>72</td>
+        <td>50</td>
+        <td>32</td>
+        <td>28</td>
+        <td>—</td>
+        <td>0.310</td>
+        <td>99</td>
+        <td>70</td>
+        <td>45.7%</td>
+        <td><span class="tag-up">营收+87.3%</span> <span class="tag-up">净利+77.8%</span></td>
+      </tr>
+      <tr>
+        <td>2009</td>
+        <td>124</td>
+        <td>86</td>
+        <td>60</td>
+        <td>52</td>
+        <td>—</td>
+        <td>0.572</td>
+        <td>175</td>
+        <td>122</td>
+        <td>53.7%</td>
+        <td><span class="tag-up">营收+73.9%</span> <span class="tag-up">净利+85.1%</span></td>
+      </tr>
+      <tr>
+        <td>2010</td>
+        <td>196</td>
+        <td>133</td>
+        <td>98</td>
+        <td>81</td>
+        <td>—</td>
+        <td>0.886</td>
+        <td>358</td>
+        <td>218</td>
+        <td>47.5%</td>
+        <td><span class="tag-up">营收+57.9%</span> <span class="tag-up">净利+56.2%</span></td>
+      </tr>
+      <tr>
+        <td>2011</td>
+        <td>285</td>
+        <td>186</td>
+        <td>123</td>
+        <td>102</td>
+        <td>109</td>
+        <td>1.122</td>
+        <td>568</td>
+        <td>285</td>
+        <td>40.6%</td>
+        <td><span class="tag-up">营收+45.0%</span> <span class="tag-up">净利+26.7%</span></td>
+      </tr>
+      <tr>
+        <td>2012</td>
+        <td>439</td>
+        <td>257</td>
+        <td>155</td>
+        <td>127</td>
+        <td>143</td>
+        <td>1.393</td>
+        <td>753</td>
+        <td>413</td>
+        <td>36.5%</td>
+        <td><span class="tag-up">营收+54.0%</span> <span class="tag-up">净利+24.8%</span></td>
+      </tr>
+      <tr>
+        <td>2013</td>
+        <td>604</td>
+        <td>327</td>
+        <td>192</td>
+        <td>155</td>
+        <td>170</td>
+        <td>1.693</td>
+        <td>1,072</td>
+        <td>579</td>
+        <td>31.2%</td>
+        <td><span class="tag-up">营收+37.7%</span> <span class="tag-up">净利+21.8%</span></td>
+      </tr>
+      <tr>
+        <td>2014</td>
+        <td>789</td>
+        <td>481</td>
+        <td>305</td>
+        <td>238</td>
+        <td>247</td>
+        <td>2.579</td>
+        <td>1,712</td>
+        <td>800</td>
+        <td>34.5%</td>
+        <td><span class="tag-up">营收+30.6%</span> <span class="tag-up">净利+53.6%</span></td>
+      </tr>
+      <tr>
+        <td>2015</td>
+        <td>1,029</td>
+        <td>612</td>
+        <td>406</td>
+        <td>288</td>
+        <td>324</td>
+        <td>3.097</td>
+        <td>3,068</td>
+        <td>1,200</td>
+        <td>28.8%</td>
+        <td><span class="tag-up">营收+30.3%</span> <span class="tag-up">净利+21.0%</span></td>
+      </tr>
+      <tr>
+        <td>2016</td>
+        <td>1,519</td>
+        <td>845</td>
+        <td>561</td>
+        <td>411</td>
+        <td>454</td>
+        <td>4.383</td>
+        <td>3,959</td>
+        <td>1,746</td>
+        <td>27.9%</td>
+        <td><span class="tag-up">营收+47.7%</span> <span class="tag-up">净利+42.7%</span></td>
+      </tr>
+      <tr>
+        <td>2017</td>
+        <td>2,378</td>
+        <td>1,169</td>
+        <td>903</td>
+        <td>715</td>
+        <td>651</td>
+        <td>7.598</td>
+        <td>5,547</td>
+        <td>2,561</td>
+        <td>33.2%</td>
+        <td><span class="tag-up">营收+56.5%</span> <span class="tag-up">净利+74.0%</span></td>
+      </tr>
+      <tr>
+        <td>2018</td>
+        <td>3,127</td>
+        <td>1,421</td>
+        <td>976</td>
+        <td>787</td>
+        <td>775</td>
+        <td>8.336</td>
+        <td>7,235</td>
+        <td>3,235</td>
+        <td>27.2%</td>
+        <td><span class="tag-up">营收+31.5%</span> <span class="tag-up">净利+10.1%</span></td>
+      </tr>
+      <tr>
+        <td>2019</td>
+        <td>3,773</td>
+        <td>1,675</td>
+        <td>965</td>
+        <td>933</td>
+        <td>944</td>
+        <td>9.856</td>
+        <td>9,540</td>
+        <td>4,327</td>
+        <td>24.7%</td>
+        <td><span class="tag-up">营收+20.7%</span> <span class="tag-up">净利+18.5%</span></td>
+      </tr>
+      <tr>
+        <td>2020</td>
+        <td>4,821</td>
+        <td>2,215</td>
+        <td>1,262</td>
+        <td>1,598</td>
+        <td>1,227</td>
+        <td>16.844</td>
+        <td>13,334</td>
+        <td>7,040</td>
+        <td>28.1%</td>
+        <td><span class="tag-up">营收+27.8%</span> <span class="tag-up">净利+71.3%</span></td>
+      </tr>
+      <tr>
+        <td>2021</td>
+        <td>5,601</td>
+        <td>2,459</td>
+        <td>1,247</td>
+        <td>2,248</td>
+        <td>1,238</td>
+        <td>23.597</td>
+        <td>16,124</td>
+        <td>8,063</td>
+        <td>29.8%</td>
+        <td><span class="tag-up">营收+16.2%</span> <span class="tag-up">净利+40.6%</span></td>
+      </tr>
+      <tr>
+        <td>2022</td>
+        <td>5,546</td>
+        <td>2,387</td>
+        <td>1,108</td>
+        <td>1,882</td>
+        <td>1,156</td>
+        <td>19.757</td>
+        <td>15,781</td>
+        <td>7,214</td>
+        <td>24.6%</td>
+        <td><span class="tag-down">营收-1.0%</span> <span class="tag-down">净利-16.3%</span></td>
+      </tr>
+      <tr>
+        <td>2023</td>
+        <td>6,090</td>
+        <td>2,931</td>
+        <td>1,601</td>
+        <td>1,152</td>
+        <td>1,577</td>
+        <td>12.186</td>
+        <td>15,772</td>
+        <td>8,086</td>
+        <td>15.1%</td>
+        <td><span class="tag-up">营收+9.8%</span> <span class="tag-down">净利-38.8%</span></td>
+      </tr>
+      <tr>
+        <td>2024</td>
+        <td>6,603</td>
+        <td>3,492</td>
+        <td>2,081</td>
+        <td>1,941</td>
+        <td>2,227</td>
+        <td>20.938</td>
+        <td>17,810</td>
+        <td>9,735</td>
+        <td>21.8%</td>
+        <td><span class="tag-up">营收+8.4%</span> <span class="tag-up">净利+68.4%</span></td>
+      </tr>
+      <tr>
+        <td>2025</td>
+        <td>7,518</td>
+        <td>4,226</td>
+        <td>2,416</td>
+        <td>2,248</td>
+        <td>2,596</td>
+        <td>24.749</td>
+        <td>20,390</td>
+        <td>11,542</td>
+        <td>21.1%</td>
+        <td><span class="tag-up">营收+13.9%</span> <span class="tag-up">净利+15.9%</span></td>
+      </tr></tbody></table></div></div>
+  <div class="chart-block"><h3>📋 半年报数据（2004—2025，亿元/元）</h3><div class="table-scroll"><table class="data-table"><thead><tr><th>报告期</th><th>营业收入</th><th>毛利润</th><th>经营利润</th><th>归母净利润</th><th>基本EPS(元)</th></tr></thead><tbody>
+      <tr>
+        <td>2004 中期</td>
+        <td>5.3</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2005 中期</td>
+        <td>6.3</td>
+        <td>4.2</td>
+        <td>2.2</td>
+        <td>2.8</td>
+        <td>0.032</td>
+      </tr>
+      <tr>
+        <td>2006 中期</td>
+        <td>13.5</td>
+        <td>9.8</td>
+        <td>5.9</td>
+        <td>5.2</td>
+        <td>0.058</td>
+      </tr>
+      <tr>
+        <td>2007 中期</td>
+        <td>16.4</td>
+        <td>11.4</td>
+        <td>6.9</td>
+        <td>6.2</td>
+        <td>0.070</td>
+      </tr>
+      <tr>
+        <td>2008 中期</td>
+        <td>30.3</td>
+        <td>21.9</td>
+        <td>15.0</td>
+        <td>11.8</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2009 中期</td>
+        <td>53.8</td>
+        <td>36.6</td>
+        <td>25.6</td>
+        <td>22.3</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2010 中期</td>
+        <td>89.0</td>
+        <td>60.8</td>
+        <td>45.2</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2011 中期</td>
+        <td>130.8</td>
+        <td>85.5</td>
+        <td>61.7</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2012 中期</td>
+        <td>201.8</td>
+        <td>120.3</td>
+        <td>76.3</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2013 中期</td>
+        <td>279.3</td>
+        <td>153.9</td>
+        <td>96.3</td>
+        <td>77.2</td>
+        <td>1.686</td>
+      </tr>
+      <tr>
+        <td>2014 中期</td>
+        <td>381.5</td>
+        <td>227.7</td>
+        <td>156.3</td>
+        <td>122.9</td>
+        <td>1.332</td>
+      </tr>
+      <tr>
+        <td>2015 中期</td>
+        <td>458.3</td>
+        <td>278.7</td>
+        <td>194.1</td>
+        <td>142.0</td>
+        <td>1.528</td>
+      </tr>
+      <tr>
+        <td>2016 中期</td>
+        <td>676.9</td>
+        <td>390.4</td>
+        <td>277.3</td>
+        <td>199.2</td>
+        <td>2.128</td>
+      </tr>
+      <tr>
+        <td>2017 中期</td>
+        <td>1,061.6</td>
+        <td>537.5</td>
+        <td>418.3</td>
+        <td>327.1</td>
+        <td>3.480</td>
+      </tr>
+      <tr>
+        <td>2018 中期</td>
+        <td>1,472.0</td>
+        <td>714.9</td>
+        <td>525.0</td>
+        <td>411.6</td>
+        <td>4.363</td>
+      </tr>
+      <tr>
+        <td>2019 中期</td>
+        <td>1,742.9</td>
+        <td>—</td>
+        <td>—</td>
+        <td>513.5</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2020 中期</td>
+        <td>2,229.5</td>
+        <td>—</td>
+        <td>—</td>
+        <td>620.0</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2021 中期</td>
+        <td>2,736.0</td>
+        <td>—</td>
+        <td>—</td>
+        <td>904.0</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2022 中期</td>
+        <td>2,695.0</td>
+        <td>—</td>
+        <td>—</td>
+        <td>420.0</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2023 中期</td>
+        <td>2,991.9</td>
+        <td>—</td>
+        <td>—</td>
+        <td>520.4</td>
+        <td>—</td>
+      </tr></tbody></table></div></div>
+  <div class="chart-block"><h3>📋 季度数据（2019—2026，亿元）</h3><div class="table-scroll"><table class="data-table"><thead><tr><th>期间</th><th>营收</th><th>归母净利润</th></tr></thead><tbody><tr><td>2019Q1</td><td>854.6</td><td>272.1</td></tr><tr><td>2019Q2</td><td>888.2</td><td>241.4</td></tr><tr><td>2019Q3</td><td>972.4</td><td>203.8</td></tr><tr><td>2019Q4</td><td>1,057.7</td><td>215.8</td></tr><tr><td>2020Q1</td><td>1,080.7</td><td>289.0</td></tr><tr><td>2020Q2</td><td>1,148.8</td><td>331.1</td></tr><tr><td>2020Q3</td><td>1,254.5</td><td>385.4</td></tr><tr><td>2020Q4</td><td>1,336.7</td><td>593.0</td></tr><tr><td>2021Q1</td><td>1,353.0</td><td>478.0</td></tr><tr><td>2021Q2</td><td>1,383.0</td><td>426.0</td></tr><tr><td>2021Q3</td><td>1,424.0</td><td>395.0</td></tr><tr><td>2021Q4</td><td>1,441.2</td><td>949.2</td></tr><tr><td>2022Q1</td><td>1,355.0</td><td>234.0</td></tr><tr><td>2022Q2</td><td>1,340.0</td><td>186.0</td></tr><tr><td>2022Q3</td><td>1,401.0</td><td>399.0</td></tr><tr><td>2022Q4</td><td>1,449.5</td><td>1,063.4</td></tr><tr><td>2023Q1</td><td>1,499.9</td><td>258.4</td></tr><tr><td>2023Q2</td><td>1,492.0</td><td>262.0</td></tr><tr><td>2023Q3</td><td>1,546.0</td><td>362.0</td></tr><tr><td>2023Q4</td><td>1,552.3</td><td>269.8</td></tr><tr><td>2024Q1</td><td>1,595.0</td><td>418.9</td></tr><tr><td>2026Q1</td><td>1,964.6</td><td>580.9</td></tr></tbody></table></div></div>
+  <div class="chart-block"><h3>📋 补充指标（2004—2025，亿元/港元）</h3><div class="table-scroll"><table class="data-table"><thead><tr><th>年份</th><th>增值服务</th><th>广告/营销服务</th><th>金融科技及企服</th><th>电商</th><th>其他</th><th>FCF(估算)</th><th>Capex</th><th>DPS(港元)</th><th>Non-GAAP经营利润</th></tr></thead><tbody>
+      <tr>
+        <td>2004</td>
+        <td>10.8</td>
+        <td>0.5</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.1</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.014</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2005</td>
+        <td>13.0</td>
+        <td>1.1</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.1</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.016</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2006</td>
+        <td>25.3</td>
+        <td>2.7</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.1</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.024</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2007</td>
+        <td>33.2</td>
+        <td>4.9</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.1</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.032</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2008</td>
+        <td>63.1</td>
+        <td>8.3</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.1</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.070</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2009</td>
+        <td>114.4</td>
+        <td>9.6</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.4</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.080</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2010</td>
+        <td>182.0</td>
+        <td>13.7</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.8</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.110</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2011</td>
+        <td>263.1</td>
+        <td>19.9</td>
+        <td>—</td>
+        <td>—</td>
+        <td>1.9</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.150</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2012</td>
+        <td>357.2</td>
+        <td>33.8</td>
+        <td>—</td>
+        <td>44.3</td>
+        <td>3.7</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.200</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2013</td>
+        <td>449.9</td>
+        <td>50.3</td>
+        <td>—</td>
+        <td>98.0</td>
+        <td>6.2</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.240</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2014</td>
+        <td>633.1</td>
+        <td>83.1</td>
+        <td>—</td>
+        <td>47.5</td>
+        <td>25.6</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.360</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2015</td>
+        <td>806.7</td>
+        <td>174.7</td>
+        <td>—</td>
+        <td>—</td>
+        <td>47.3</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.470</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2016</td>
+        <td>1,078.1</td>
+        <td>269.7</td>
+        <td>—</td>
+        <td>—</td>
+        <td>171.6</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.610</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2017</td>
+        <td>1,539.8</td>
+        <td>404.4</td>
+        <td>—</td>
+        <td>—</td>
+        <td>433.4</td>
+        <td>—</td>
+        <td>—</td>
+        <td>0.880</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2018</td>
+        <td>1,766.5</td>
+        <td>580.8</td>
+        <td>—</td>
+        <td>—</td>
+        <td>779.7</td>
+        <td>—</td>
+        <td>—</td>
+        <td>1.000</td>
+        <td>924.8</td>
+      </tr>
+      <tr>
+        <td>2019</td>
+        <td>1,999.9</td>
+        <td>683.8</td>
+        <td>1,013.5</td>
+        <td>—</td>
+        <td>75.7</td>
+        <td>1,202.6</td>
+        <td>323.7</td>
+        <td>1.200</td>
+        <td>1,080.5</td>
+      </tr>
+      <tr>
+        <td>2020</td>
+        <td>2,642.1</td>
+        <td>822.7</td>
+        <td>1,280.9</td>
+        <td>—</td>
+        <td>75.0</td>
+        <td>1,234.5</td>
+        <td>339.6</td>
+        <td>1.600</td>
+        <td>1,432.4</td>
+      </tr>
+      <tr>
+        <td>2021</td>
+        <td>2,915.7</td>
+        <td>886.7</td>
+        <td>1,722.0</td>
+        <td>—</td>
+        <td>76.8</td>
+        <td>1,081.5</td>
+        <td>333.9</td>
+        <td>1.600</td>
+        <td>1,527.3</td>
+      </tr>
+      <tr>
+        <td>2022</td>
+        <td>2,875.7</td>
+        <td>827.3</td>
+        <td>1,770.6</td>
+        <td>—</td>
+        <td>71.9</td>
+        <td>884.0</td>
+        <td>180.1</td>
+        <td>2.400</td>
+        <td>1,432.0</td>
+      </tr>
+      <tr>
+        <td>2023</td>
+        <td>2,983.8</td>
+        <td>1,014.8</td>
+        <td>2,037.6</td>
+        <td>—</td>
+        <td>54.0</td>
+        <td>1,670.0</td>
+        <td>238.9</td>
+        <td>3.400</td>
+        <td>1,918.9</td>
+      </tr>
+      <tr>
+        <td>2024</td>
+        <td>3,191.7</td>
+        <td>1,213.7</td>
+        <td>2,119.6</td>
+        <td>—</td>
+        <td>77.6</td>
+        <td>1,553.0</td>
+        <td>767.6</td>
+        <td>4.500</td>
+        <td>2,378.1</td>
+      </tr>
+      <tr>
+        <td>2025</td>
+        <td>3,692.8</td>
+        <td>1,449.7</td>
+        <td>2,294.3</td>
+        <td>—</td>
+        <td>80.8</td>
+        <td>1,826.0</td>
+        <td>792.0</td>
+        <td>5.300</td>
+        <td>2,806.6</td>
+      </tr></tbody></table></div></div>
+</div>
+
+<div class="section" id="sec-mgmt">
+  <div class="summary-box">
+    <h3>📌 管理层观点时间轴</h3>
+    <p>基于历年年度报告<span class="hl">"主席报告 / Chairman's Statement / 业务回顾与展望"</span>原文，从业务亮点、市场环境、展望目标和风险挑战四个维度提炼管理层核心判断。覆盖 <span class="hl">2004—2025</span> 共 11 个关键转折年份。</p>
+  </div>
+
+  <div class="mgmt-filters">
+    <button class="mgmt-filter active" data-dim="all">全部</button>
+    <button class="mgmt-filter" data-dim="highlights">🔆 业务亮点</button>
+    <button class="mgmt-filter" data-dim="market">📊 市场环境</button>
+    <button class="mgmt-filter" data-dim="outlook">🎯 展望目标</button>
+    <button class="mgmt-filter" data-dim="risks">⚠️ 风险挑战</button>
+    <input type="text" id="mgmt-search" placeholder="🔍 搜索关键词..." />
+  </div>
+
+  <div class="mgmt-timeline" id="mgmt-timeline"></div>
+</div>
+
+<footer class="footer"><p>腾讯控股财务分析报告 ｜ 2004—2025 ｜ AI 辅助生成 ｜ 数据来源：香港联交所披露易 / 腾讯投资者关系官网公开年报、中期报告及季度业绩公告 PDF ｜ 仅供参考，不构成投资建议</p></footer>
+
+<script>
+const REV_Y = ["2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+const REV_V = [11.44, 14.26, 28.0, 38.21, 71.55, 124.4, 196.46, 284.96, 438.94, 604.37, 789.32, 1028.63, 1519.38, 2377.6, 3126.94, 3772.89, 4820.64, 5601.18, 5545.52, 6090.15, 6602.57, 7517.66];
+const GROSS_V = [7.25, 9.57, 19.83, 27.03, 49.84, 85.5, 133.26, 185.68, 256.86, 326.59, 480.59, 612.32, 844.99, 1169.25, 1421.2, 1675.33, 2215.32, 2459.44, 2387.46, 2931.09, 3492.46, 4225.93];
+const OP_V = [4.69, 4.84, 11.63, 16.35, 32.46, 60.2, 98.38, 122.54, 154.79, 191.94, 305.42, 406.27, 561.17, 903.02, 976.48, 965.01, 1261.97, 1246.56, 1108.27, 1600.74, 2080.99, 2415.62];
+const ATTR_V = [4.41, 4.85, 10.64, 15.66, 27.85, 51.56, 80.54, 102.03, 127.32, 155.02, 238.1, 288.06, 410.95, 715.1, 787.19, 933.1, 1598.47, 2248.22, 1882.43, 1152.16, 1940.73, 2248.42];
+const NIFRS_V = [null, null, null, null, null, null, null, 109.4, 142.86, 170.08, 247.37, 324.1, 454.2, 651.26, 774.69, 943.51, 1227.42, 1237.88, 1156.49, 1576.88, 2227.03, 2596.26];
+const TA_V = [28.63, 34.27, 46.51, 69.25, 98.56, 175.06, 358.3, 568.04, 752.56, 1072.35, 1711.66, 3068.18, 3958.99, 5546.72, 7235.21, 9539.86, 13334.25, 16123.64, 15781.31, 15772.46, 17809.95, 20389.86];
+const NA_V = [26.52, 29.28, 37.18, 51.7, 70.21, 121.79, 217.57, 284.64, 412.98, 579.45, 800.13, 1200.35, 1746.24, 2560.74, 3235.1, 4327.06, 7039.84, 8062.99, 7213.91, 8085.91, 9735.48, 11541.52];
+const EPS_V = [0.058, 0.0548, 0.1206, 0.176, 0.3104, 0.5724, 0.8864, 1.1218, 1.393, 1.6928, 2.579, 3.097, 4.383, 7.598, 8.336, 9.856, 16.844, 23.597, 19.757, 12.186, 20.938, 24.749];
+const ROE_V = [16.6, 17.4, 32.0, 35.2, 45.7, 53.7, 47.5, 40.6, 36.5, 31.2, 34.5, 28.8, 27.9, 33.2, 27.2, 24.7, 28.1, 29.8, 24.6, 15.1, 21.8, 21.1];
+const ROA_V = [15.4, 15.4, 26.3, 27.1, 33.2, 37.7, 30.2, 22.0, 19.3, 17.0, 17.1, 12.1, 11.7, 15.0, 12.3, 11.1, 14.0, 15.3, 11.8, 7.3, 11.6, 11.8];
+const DPS_V = [0.014, 0.016, 0.024, 0.032, 0.07, 0.08, 0.11, 0.15, 0.2, 0.24, 0.36, 0.47, 0.61, 0.88, 1.0, 1.2, 1.6, 1.6, 2.4, 3.4, 4.5, 5.3];
+const NIFRS_OP_V = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, 924.8, 1080.5, 1432.4, 1527.3, 1432.0, 1918.9, 2378.1, 2806.6];
+const SEG_VAS = [10.8, 13.0, 25.3, 33.2, 63.1, 114.4, 182.0, 263.1, 357.2, 449.9, 633.1, 806.7, 1078.1, 1539.8, 1766.5, 1999.9, 2642.1, 2915.7, 2875.7, 2983.8, 3191.7, 3692.8];
+const SEG_ADS = [0.5, 1.1, 2.7, 4.9, 8.3, 9.6, 13.7, 19.9, 33.8, 50.3, 83.1, 174.7, 269.7, 404.4, 580.8, 683.8, 822.7, 886.7, 827.3, 1014.8, 1213.7, 1449.7];
+const SEG_FINTECH = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1013.5, 1280.9, 1722.0, 1770.6, 2037.6, 2119.6, 2294.3];
+const SEG_ECOM = [null, null, null, null, null, null, null, null, 44.3, 98.0, 47.5, null, null, null, null, null, null, null, null, null, null, null];
+const SEG_OTHERS = [0.1, 0.1, 0.1, 0.1, 0.1, 0.4, 0.8, 1.9, 3.7, 6.2, 25.6, 47.3, 171.6, 433.4, 779.7, 75.7, 75.0, 76.8, 71.9, 54.0, 77.6, 80.8];
+const SEG_VAS_PCT = [94.4, 91.2, 90.4, 86.9, 88.2, 92.0, 92.6, 92.3, 81.4, 74.4, 80.2, 78.4, 71.0, 64.8, 56.5, 53.0, 54.8, 52.1, 51.9, 49.0, 48.3, 49.1];
+const SEG_ADS_PCT = [4.4, 7.7, 9.6, 12.8, 11.6, 7.7, 7.0, 7.0, 7.7, 8.3, 10.5, 17.0, 17.8, 17.0, 18.6, 18.1, 17.1, 15.8, 14.9, 16.7, 18.4, 19.3];
+const SEG_FINTECH_PCT = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 26.9, 26.6, 30.7, 31.9, 33.5, 32.1, 30.5];
+const SEG_ECOM_PCT = [null, null, null, null, null, null, null, null, 10.1, 16.2, 6.0, null, null, null, null, null, null, null, null, null, null, null];
+const SEG_OTHERS_PCT = [0.9, 0.7, 0.4, 0.3, 0.1, 0.3, 0.4, 0.7, 0.8, 1.0, 3.2, 4.6, 11.3, 18.2, 24.9, 2.0, 1.6, 1.4, 1.3, 0.9, 1.2, 1.1];
+const FC_LABELS = ["2019Q1", "2019Q2", "2019Q3", "2019Q4", "2020Q1", "2020Q2", "2020Q3", "2020Q4", "2021Q1", "2021Q2", "2021Q3", "2021Q4", "2022Q1", "2022Q2", "2022Q3", "2022Q4", "2023Q1", "2023Q2", "2023Q3", "2023Q4", "2024Q1", "2024Q2", "2024Q3", "2024Q4", "2025Q1", "2025Q2", "2025Q3", "2025Q4", "2026Q1"];
+const FC_FCF = [239.3, 207.0, 377.3, 379.0, 392.1, 284.5, 281.3, 276.6, 332.0, 173.0, 241.0, 335.5, 152.0, 225.0, 276.0, 231.0, 518.0, 299.0, 511.0, 342.0, 519.0, 404.0, 585.0, 45.0, 471.0, 430.0, 585.0, 340.0, 567.0];
+const FC_CAPEX = [45.1, 43.6, 66.3, 168.7, 61.5, 94.7, 86.8, 96.6, 77.3, 69.4, 70.6, 116.6, 69.7, 30.1, 23.8, 56.5, 44.1, 39.5, 80.0, 75.2, 143.6, 87.3, 170.9, 365.8, 274.8, 191.1, 129.8, 196.3, 319.4];
+const FCF_FY = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1202.6, 1234.5, 1081.5, 884.0, 1670.0, 1553.0, 1826.0];
+const CAPEX_FY = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 323.7, 339.6, 333.9, 180.1, 238.9, 767.6, 792.0];
+const REV_G = [null, 24.7, 96.4, 36.5, 87.3, 73.9, 57.9, 45.0, 54.0, 37.7, 30.6, 30.3, 47.7, 56.5, 31.5, 20.7, 27.8, 16.2, -1.0, 9.8, 8.4, 13.9];
+const ATTR_G = [null, 10.0, 119.4, 47.2, 77.8, 85.1, 56.2, 26.7, 24.8, 21.8, 53.6, 21.0, 42.7, 74.0, 10.1, 18.5, 71.3, 40.6, -16.3, -38.8, 68.4, 15.9];
+const GROSS_MARGIN = [63.4, 67.1, 70.8, 70.7, 69.7, 68.7, 67.8, 65.2, 58.5, 54.0, 60.9, 59.5, 55.6, 49.2, 45.5, 44.4, 46.0, 43.9, 43.1, 48.1, 52.9, 56.2];
+const NET_MARGIN = [38.5, 34.0, 38.0, 41.0, 38.9, 41.4, 41.0, 35.8, 29.0, 25.6, 30.2, 28.0, 27.0, 30.1, 25.2, 24.7, 33.2, 40.1, 33.9, 18.9, 29.4, 29.9];
+const DEBT_RATIO = [7.4, 14.6, 20.1, 25.3, 28.8, 30.4, 39.3, 49.9, 45.1, 46.0, 53.3, 60.9, 55.9, 53.8, 55.3, 54.6, 47.2, 50.0, 54.3, 48.7, 45.3, 43.4];
+
+const Q_LABELS = ["2019Q1", "2019Q2", "2019Q3", "2019Q4", "2020Q1", "2020Q2", "2020Q3", "2020Q4", "2021Q1", "2021Q2", "2021Q3", "2021Q4", "2022Q1", "2022Q2", "2022Q3", "2022Q4", "2023Q1", "2023Q2", "2023Q3", "2023Q4", "2024Q1", "2026Q1"];
+const Q_REV = [854.6, 888.2, 972.4, 1057.7, 1080.7, 1148.8, 1254.5, 1336.7, 1353.0, 1383.0, 1424.0, 1441.2, 1355.0, 1340.0, 1401.0, 1449.5, 1499.9, 1492.0, 1546.0, 1552.3, 1595.0, 1964.6];
+const Q_ATTR = [272.1, 241.4, 203.8, 215.8, 289.0, 331.1, 385.4, 593.0, 478.0, 426.0, 395.0, 949.2, 234.0, 186.0, 399.0, 1063.4, 258.4, 262.0, 362.0, 269.8, 418.9, 580.9];
+
+var C = ['#006D77','#E29578','#1B2A4A','#83C5BE','#9467bd','#00b894','#e17055','#fd79a8'];
+var cr = {};
+
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-bar button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('sec-' + id).classList.add('active');
+  document.getElementById('btn-' + id).classList.add('active');
+  if (!cr[id]) { cr[id] = true;
+    var f = { overview: initOverview, core: initCore, revenue: initRevenue, returns: initReturns, growth: initGrowth, quality: initQuality, cashflow: initCashflow, quarterly: initQuarterly, mgmt: initMgmtTimeline };
+    if (f[id]) f[id]();
+  }
+}
+
+['overview','core','revenue','returns','growth','quality','cashflow','quarterly','detail','mgmt'].forEach(function(id) {
+  document.getElementById('btn-' + id).addEventListener('click', function() { showTab(id); });
+});
+
+function initOverview() {
+  new Chart(document.getElementById('chart_rev22'), { type: 'line',
+    data: { labels: REV_Y, datasets: [{ label: '营业收入(亿)', data: REV_V, borderColor: C[0], backgroundColor: C[0] + '15', fill: true, tension: 0.2, pointRadius: 3, pointHoverRadius: 6, borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { title: { display: true, text: '亿元' } } } }
+  });
+  new Chart(document.getElementById('chart_revg'), { type: 'bar',
+    data: { labels: REV_Y.slice(1), datasets: [{ label: '营收增速%', data: REV_G.slice(1), backgroundColor: REV_G.slice(1).map(function(v) { return v >= 0 ? C[0] + '99' : C[1] + '99'; }) }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { title: { display: true, text: '增长率%' } } } }
+  });
+  new Chart(document.getElementById('chart_profit'), { type: 'line',
+    data: { labels: REV_Y, datasets: [{ label: '归母净利润(亿)', data: ATTR_V, borderColor: C[1], backgroundColor: C[1] + '15', fill: true, tension: 0.3, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { title: { display: true, text: '亿元' } } } }
+  });
+}
+
+function initCore() {
+  new Chart(document.getElementById('chart_rev_core'), { type: 'line',
+    data: { labels: REV_Y, datasets: [{ label: '营业收入(亿)', data: REV_V, borderColor: C[0], backgroundColor: C[0] + '15', fill: true, tension: 0.3, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('chart_profit_core'), { type: 'line',
+    data: { labels: REV_Y, datasets: [{ label: '归母净利润(亿)', data: ATTR_V, borderColor: C[1], backgroundColor: C[1] + '15', fill: true, tension: 0.3, pointRadius: 3, borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('chart_ae'), { type: 'bar',
+    data: { labels: REV_Y, datasets: [{ label: '总资产', data: TA_V, backgroundColor: C[2] + '99' },{ label: '归母净资产', data: NA_V, backgroundColor: C[3] + '99' }] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  });
+  new Chart(document.getElementById('chart_dar'), { type: 'line',
+    data: { labels: REV_Y, datasets: [
+      { label: '资产负债率%', data: DEBT_RATIO, borderColor: C[1], tension: 0.3, pointRadius: 3, fill: false, borderWidth: 2 },
+      { label: 'ROA%（归母净利/总资产均值）', data: ROA_V, borderColor: C[0], tension: 0.3, pointRadius: 3, fill: false, borderWidth: 2, borderDash: [5,5] }
+    ] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  });
+}
+
+function initRevenue() {
+  var segDs = [
+    { label: '增值服务', data: SEG_VAS, backgroundColor: C[0] + 'CC' },
+    { label: '广告/营销服务', data: SEG_ADS, backgroundColor: C[1] + 'CC' },
+    { label: '金融科技及企业服务', data: SEG_FINTECH, backgroundColor: C[3] + 'CC' },
+    { label: '电子商务', data: SEG_ECOM, backgroundColor: C[4] + 'CC' },
+    { label: '其他', data: SEG_OTHERS, backgroundColor: '#B0BEC5CC' }
+  ];
+  new Chart(document.getElementById('chart_seg_abs'), { type: 'bar',
+    data: { labels: REV_Y, datasets: segDs },
+    options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { x: { stacked: true }, y: { stacked: true, title: { display: true, text: '亿元' } } } }
+  });
+  var segPctDs = [
+    { label: '增值服务', data: SEG_VAS_PCT, backgroundColor: C[0] + 'CC' },
+    { label: '广告/营销服务', data: SEG_ADS_PCT, backgroundColor: C[1] + 'CC' },
+    { label: '金融科技及企业服务', data: SEG_FINTECH_PCT, backgroundColor: C[3] + 'CC' },
+    { label: '电子商务', data: SEG_ECOM_PCT, backgroundColor: C[4] + 'CC' },
+    { label: '其他', data: SEG_OTHERS_PCT, backgroundColor: '#B0BEC5CC' }
+  ];
+  new Chart(document.getElementById('chart_seg_pct'), { type: 'bar',
+    data: { labels: REV_Y, datasets: segPctDs },
+    options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { x: { stacked: true }, y: { stacked: true, max: 100, title: { display: true, text: '%' } } } }
+  });
+}
+
+function initCashflow() {
+  new Chart(document.getElementById('chart_fc_q'), { type: 'bar',
+    data: { labels: FC_LABELS, datasets: [
+      { label: '自由现金流(亿)', data: FC_FCF, backgroundColor: C[0] + '99' },
+      { label: '资本开支(亿)', data: FC_CAPEX, backgroundColor: C[1] + '99' }
+    ] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { x: { ticks: { maxRotation: 90, minRotation: 60, font: { size: 9 } } } } }
+  });
+  new Chart(document.getElementById('chart_fcf_np'), { type: 'bar',
+    data: { labels: REV_Y, datasets: [
+      { label: '年度FCF(亿,估算)', data: FCF_FY, backgroundColor: C[0] + '99' },
+      { label: '归母净利润(亿)', data: ATTR_V, type: 'line', borderColor: C[1], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+    ] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  });
+  new Chart(document.getElementById('chart_capex_fy'), { type: 'bar',
+    data: { labels: REV_Y, datasets: [{ label: '资本开支(亿)', data: CAPEX_FY, backgroundColor: C[1] + '99' }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+}
+
+function initGrowth() {
+  new Chart(document.getElementById('chart_rpg'), { type: 'bar',
+    data: { labels: REV_Y.slice(1), datasets: [{ label: '营收增速%', data: REV_G.slice(1), backgroundColor: C[0] + '99' },{ label: '归母净利润增速%', data: ATTR_G.slice(1), backgroundColor: C[1] + '99' }] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  });
+  new Chart(document.getElementById('chart_margin'), { type: 'line',
+    data: { labels: REV_Y, datasets: [
+      { label: '毛利率%', data: GROSS_MARGIN, borderColor: C[3], tension: 0.3, pointRadius: 3, borderWidth: 2 },
+      { label: '归母净利率%', data: NET_MARGIN, borderColor: C[1], tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5,5] }
+    ] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  });
+}
+
+function initReturns() {
+  new Chart(document.getElementById('chart_eps'), { type: 'bar',
+    data: { labels: REV_Y, datasets: [{ label: 'EPS(元)', data: EPS_V, backgroundColor: C[4] + '99' }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('chart_roe'), { type: 'line',
+    data: { labels: REV_Y, datasets: [{ label: 'ROE%', data: ROE_V, borderColor: C[1], backgroundColor: C[1] + '15', fill: true, tension: 0.3, pointRadius: 3, borderWidth: 3 }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('chart_dps'), { type: 'bar',
+    data: { labels: REV_Y, datasets: [{ label: 'DPS(港元)', data: DPS_V, backgroundColor: C[3] + 'CC' }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('chart_roe_npm'), { type: 'line',
+    data: { labels: REV_Y, datasets: [
+      { label: 'ROE%', data: ROE_V, borderColor: C[1], tension: 0.3, pointRadius: 4, borderWidth: 3, yAxisID: 'y' },
+      { label: '归母净利率%', data: NET_MARGIN, borderColor: C[0], tension: 0.3, pointRadius: 4, borderWidth: 2, yAxisID: 'y1', borderDash: [5,5] }
+    ] },
+    options: { responsive: true, scales: { y: { type: 'linear', position: 'left', title: { display: true, text: 'ROE%' } }, y1: { type: 'linear', position: 'right', title: { display: true, text: '归母净利率%' }, grid: { drawOnChartArea: false } } }, plugins: { legend: { position: 'top' } } }
+  });
+}
+
+function initQuality() {
+  new Chart(document.getElementById('chart_ifrs_nifrs'), { type: 'line',
+    data: { labels: REV_Y, datasets: [
+      { label: 'IFRS归母净利润(亿)', data: ATTR_V, borderColor: C[1], tension: 0.3, pointRadius: 3, borderWidth: 3 },
+      { label: 'Non-GAAP归母净利润(亿)', data: NIFRS_V, borderColor: C[0], tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5,5], spanGaps: true }
+    ] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { title: { display: true, text: '亿元' } } } }
+  });
+  new Chart(document.getElementById('chart_op_cmp'), { type: 'line',
+    data: { labels: REV_Y, datasets: [
+      { label: 'IFRS经营利润(亿)', data: OP_V, borderColor: C[2], tension: 0.3, pointRadius: 3, borderWidth: 3 },
+      { label: 'Non-GAAP经营利润(亿)', data: NIFRS_OP_V, borderColor: C[0], tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5,5], spanGaps: true }
+    ] },
+    options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { title: { display: true, text: '亿元' } } } }
+  });
+  new Chart(document.getElementById('chart_op'), { type: 'bar',
+    data: { labels: REV_Y, datasets: [{ label: '经营利润(亿)', data: OP_V, backgroundColor: C[2] + '99' }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('chart_gross'), { type: 'bar',
+    data: { labels: REV_Y, datasets: [{ label: '毛利润(亿)', data: GROSS_V, backgroundColor: C[3] + '99' }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+}
+
+function initQuarterly() {
+  new Chart(document.getElementById('chart_q_rev'), { type: 'bar',
+    data: { labels: Q_LABELS, datasets: [{ label: '季度营收(亿)', data: Q_REV, backgroundColor: C[0] + '99' }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 90, minRotation: 60, font: { size: 9 } } } } }
+  });
+  new Chart(document.getElementById('chart_q_attr'), { type: 'bar',
+    data: { labels: Q_LABELS, datasets: [{ label: '季度归母净利润(亿)', data: Q_ATTR, backgroundColor: Q_ATTR.map(function(v) { return (v===null||v>=0) ? C[1]+'99' : '#C6282899'; }) }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 90, minRotation: 60, font: { size: 9 } } } } }
+  });
+}
+
+var MGMT = {"2004": {"highlights": ["2004年6月16日在香港联交所主板上市，募集资金净额19.05亿元", "IM平台注册账户达3.7亿，活跃账户1.35亿，同比增长65%", "网络增值服务收入同比增长91.1%至4.39亿元，成为第一大收入来源", "QQ游戏门户上线，拓展在线娱乐业务版图"], "market": ["移动运营商加强对MVAS行业监管措施，行业规则趋严", "即时通讯市场竞争加剧，多家同业加码开发竞品IM服务", "中国互联网及移动增值服务市场仍处发展早期，长期成长空间大"], "outlook": ["看好IVAS与MVAS市场的长期结构性增长趋势", "持续投入研发、内容、服务器及带宽以支撑用户体验", "以IM平台为核心，向游戏门户等新业务延伸变现能力"], "risks": ["MVAS业务受运营商监管政策收紧影响，四季度环比下滑", "与中国移动的161合作分成协议到期，将拖累2005年一季度收入", "行业短期波动性和不确定性仍然存在"]}, "2008": {"highlights": ["全年收入71.55亿元，同比增长87.2%；经营利润率提升至45.4%", "四川地震期间组织全国最大规模网络募捐，彰显平台社会影响力", "北京奥运期间内容流量与用户到达率均创纪录，媒体属性显著增强", "归母净利润27.85亿元，同比增长77.8%"], "market": ["中国网民规模达2.98亿，同比增长42%，但渗透率仅23%，成长空间仍大", "年末全球金融海啸冲击金融市场，资产价格大幅波动", "中国互联网用户规模已超越美国，成为全球最大互联网市场"], "outlook": ["认为中国互联网仍是成长初期市场，长期潜力尚未充分释放", "将继续以IM社区为核心，拓展增值服务与广告变现"], "risks": ["金融海啸波及全球资本市场，金融资产大幅贬值", "宏观经济不确定性上升，可能影响广告及消费类收入"]}, "2011": {"highlights": ["微信（Weixin）于年内推出，社交产品版图向移动端延伸", "归母净利润102.03亿元，同比增长26.7%", "开放平台注册第三方应用超4万个，10余款月活超千万", "腾讯微博用户与活跃度快速提升，跃居行业前列", "投资Riot Games，LOL成为全球最受欢迎网络游戏之一"], "market": ["欧债危机加深，全球经济不确定性上升，中国经济增速放缓但仍稳健", "中国网民达5.13亿，同比增速放缓至12.2%，移动网民占比升至69.3%", "智能手机普及推动移动互联网加速渗透，微博类社交媒体快速崛起"], "outlook": ["持续投入开放平台生态，赋能第三方开发者变现", "加码安全、国际化等战略方向，巩固综合互联网服务优势"], "risks": ["用户增长放缓，行业竞争随市场规模扩大而加剧", "网页游戏等细分市场增长机会与不确定性并存"]}, "2014": {"highlights": ["确立“连接一切”战略，微信与手机QQ成为移动端核心枢纽", "电商业务与京东达成战略合作，交易业务转由京东主导", "归母净利润238.10亿元，同比增长54%；Non-GAAP净利润增长51%", "移动游戏收入快速放量，成为游戏业务新增长引擎"], "market": ["移动互联网重塑行业格局，手游、移动广告、移动支付加速崛起", "O2O热潮兴起，餐饮、出行、生活服务加速线上化", "行业竞争激烈，主要参与者在移动应用、数字内容、O2O领域重金投入"], "outlook": ["聚焦“连接”战略，以微信与手机QQ连接用户、内容、服务与硬件", "电商业务转型后将聚焦流量与生态协同，而非自营交易规模"], "risks": ["电商自营业务向京东转移导致该分部收入同比下降87%", "移动化转型期竞争加剧，需持续投入以保持领先地位"]}, "2018": {"highlights": ["成立20周年，10月启动组织架构“930变革”，新设云与智慧产业事业群", "小程序日均访问量快速增长，长尾小程序占比达43%", "微信及WeChat合并月活跃账户约10.98亿，数字内容订阅数破1亿", "腾讯音乐娱乐（TME）于纽交所上市"], "market": ["游戏版号审批一度暂停，行业监管环境趋严，未成年人保护要求提高", "移动互联网流量红利见顶，行业竞争转向精细化运营", "产业互联网（To B）机遇兴起，云与企业服务成为新战场"], "outlook": ["通过组织升级衔接消费互联网优势与产业互联网机遇", "深化社交、内容与技术融合，加大云基础设施及AI能力投入"], "risks": ["国内游戏版号审批一度冻结，新游戏上线及变现节奏受影响", "未成年人保护监管趋严，游戏行业面临更严格的时长与消费限制"]}, "2020": {"highlights": ["面对疫情“史无前例的挑战”，各项业务仍取得稳健业绩", "企业微信、腾讯会议、腾讯课堂等远程协作工具在疫情期间广泛使用", "游戏、社交、云及企业服务多点开花，四季度EBITDA同比增长20%", "虎牙直播并表贡献社交网络收入增长"], "market": ["新冠疫情冲击线下经济，线上办公、教育、娱乐需求爆发式增长", "云基础设施与SaaS产品渗透各行各业，产业互联网加速落地", "居家场景推动游戏、长视频、在线教育等数字内容消费"], "outlook": ["坚持“科技向善”使命，与行业伙伴共同为用户和社会创造价值", "持续深化消费互联网与产业互联网双轮驱动战略"], "risks": ["疫情带来经营环境的不确定性，业务节奏受阶段性冲击", "资本开支及内容成本投入增加，对短期利润率形成压力"]}, "2021": {"highlights": ["全年收入首次突破5,600亿元，同比增长16%", "四季度以实物方式向股东分派京东股份，带来大额一次性IFRS收益", "i茅台式数字化投入加码，社交、游戏基本盘保持稳健", "持续推进碳中和及可持续社会价值项目投入"], "market": ["反垄断监管趋严，平台经济、数据安全、金融科技监管全面收紧", "“共同富裕”政策导向下，企业加大社会价值投入", "游戏行业未成年人保护新规出台，防沉迷监管进一步升级"], "outlook": ["Non-GAAP经营利润率短期承压，但看好核心业务长期韧性", "计划持续投入可持续社会价值项目及碳中和目标"], "risks": ["Non-GAAP归母净利润同比仅增1%，经营利润率同比下降", "反垄断罚款、监管合规成本及一次性捐赠支出增加", "四季度Non-GAAP经营利润同比下降13%，核心业务承压"]}, "2022": {"highlights": ["聚焦核心业务、提升运营效率，为可持续增长模式打基础", "视频号使用时长及交易额快速增长，成为微信生态新增长点", "国际市场游戏收入占比提升至33%，海外业务贡献扩大", "《王者荣耀》四季度日活跃账户数恢复同比增长"], "market": ["宏观经济增速放缓，广告及消费相关收入承压", "游戏版号审批恢复常态化，但审批节奏仍偏谨慎", "行业进入降本增效阶段，互联网大厂普遍收缩非核心业务"], "outlook": ["以提升效率和聚焦核心业务作为2023年增长的基础", "视频号、小程序、国际游戏被视为核心新增长引擎"], "risks": ["归母净利润同比下降16%，Non-GAAP归母净利润同比下降7%", "收费增值服务付费会员数同比下降1%，内容排播延期影响用户规模", "宏观经济环境及消费信心疲软对广告业务造成压力"]}, "2023": {"highlights": ["视频号总用户使用时长同比翻番，成为收入结构升级的关键驱动力", "发布自研大模型腾讯混元，并升级为万亿参数规模的混合专家模型", "国际市场游戏收入占比创新高达30%，毛利同比增长23%", "股份回购规模同比增近一倍，计划2024年回购规模翻倍至超1000亿港元"], "market": ["广告AI模型升级显著提升精准投放效果，广告行业加速智能化", "生成式AI技术快速演进，成为互联网行业新一轮竞争焦点", "本土游戏“重点热门游戏”数量增加，行业头部效应持续强化"], "outlook": ["以高质量收入增长支撑更大力度的股东资本回报计划", "持续投入AI基础模型能力建设，赋能广告、企业服务等场景"], "risks": ["归母净利润同比下降39%（主要受重列口径及一次性项目影响）", "长视频付费会员数因内容排播延期短期承压"]}, "2024": {"highlights": ["归母净利润1,940.73亿元，同比增长68%；Non-GAAP净利润增长41%", "重组AI团队，加大AI相关资本开支及研发、营销投入", "微信上线“小店”，强化交易能力；视频号使用时长快速增长", "全年现金分红320亿港元，股份回购约1,120亿港元，双双创纪录"], "market": ["AI驱动的广告及游戏体验升级成为行业新增长动能", "云及企业服务需求持续增长，AI基础设施投资成为行业共识", "长视频、音乐订阅市场竞争格局趋于稳定，头部平台优势扩大"], "outlook": ["2025年拟将年度股息提高32%至每股4.50港元，回购不低于800亿港元", "相信持续加大的AI投入将带来持续回报，聚焦快速产品创新与深度模型研究"], "risks": ["AI相关资本开支大幅增加，短期内对自由现金流形成压力", "游戏及广告行业竞争依然激烈，需持续投入维持领先地位"]}, "2025": {"highlights": ["全年收入7,517.66亿元，归母净利润2,248.42亿元，同比增长16%", "《三角洲行动》突破性成功，国际市场游戏年收入突破100亿美元", "推出智能投放产品矩阵“腾讯广告AIM+”，广告加载率低于同业而收入增速领先", "视频号用户总使用时长同比增长超20%，内容生态持续丰富"], "market": ["中央经济工作会议提出“深入实施提振消费专项行动”，释放消费刺激信号", "“十五五”规划锚定2035年人均GDP达中等发达国家水平，长期利好消费升级", "行业马太效应加剧，资源加速向优势企业、优势产品集中", "白酒等消费板块进入调整期，反映宏观消费复苏仍具波动性"], "outlook": ["坚持在游戏中部署AI以加速内容制作、提升用户体验和营销效率", "混元3.0大模型智能水平持续提升，元宝、WorkBuddy等AI产品显现实际效用", "相信AI投入将为核心业务开拓新机遇，末期股息提升至每股5.30港元"], "risks": ["AI相关资本开支持续处于高位，投入产出周期需要时间验证", "国际市场游戏及广告业务面临汇率波动和地缘政治不确定性"]}};
+var mgmtFilter = 'all';
+
+function initMgmtTimeline() { renderMgmt(); }
+
+function renderMgmt() {
+  var html = '';
+  var years = Object.keys(MGMT).sort().reverse();
+  var searchTerm = (document.getElementById('mgmt-search') || {}).value || '';
+
+  years.forEach(function(year) {
+    var d = MGMT[year];
+    var summary = '';
+    if (d.highlights && d.highlights.length) summary += d.highlights[0].substring(0, 30) + '... ';
+
+    html += '<div class="mgmt-year-block">';
+    html += '<div class="mgmt-year-header" onclick="toggleYear(this)">';
+    html += '<div><span class="year">' + year + '</span><span class="title">  ' + summary + '</span></div>';
+    html += '<span class="toggle">▼</span></div>';
+    html += '<div class="mgmt-year-body">';
+
+    var dims = [
+      { key: 'highlights', label: '🔆 业务亮点与战略方向', cls: 'highlights' },
+      { key: 'market', label: '📊 市场环境与竞争判断', cls: 'market' },
+      { key: 'outlook', label: '🎯 展望与目标', cls: 'outlook' },
+      { key: 'risks', label: '⚠️ 风险与挑战', cls: 'risks' }
+    ];
+
+    dims.forEach(function(dim) {
+      if (mgmtFilter !== 'all' && mgmtFilter !== dim.key) return;
+      var items = d[dim.key] || [];
+      html += '<div class="mgmt-dim ' + dim.cls + '"><h4>' + dim.label + '</h4><ul>';
+      items.forEach(function(item) {
+        var cls = '';
+        if (searchTerm && item.indexOf(searchTerm) >= 0) cls = ' match';
+        else if (searchTerm) cls = ' hidden';
+        html += '<li class="' + cls + '">' + item + '</li>';
+      });
+      html += '</ul></div>';
+    });
+
+    html += '</div></div>';
+  });
+
+  document.getElementById('mgmt-timeline').innerHTML = html;
+}
+
+function toggleYear(header) {
+  var body = header.nextElementSibling;
+  var toggle = header.querySelector('.toggle');
+  body.classList.toggle('collapsed');
+  toggle.textContent = body.classList.contains('collapsed') ? '▶' : '▼';
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('mgmt-filter')) {
+    document.querySelectorAll('.mgmt-filter').forEach(function(b) { b.classList.remove('active'); });
+    e.target.classList.add('active');
+    mgmtFilter = e.target.dataset.dim;
+    renderMgmt();
+  }
+});
+
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'mgmt-search') {
+    renderMgmt();
+    if (e.target.value) {
+      document.querySelectorAll('.mgmt-year-body').forEach(function(b) {
+        if (b.querySelector('.match')) b.classList.remove('collapsed');
+      });
+    }
+  }
+});
+
+window.addEventListener('load', function() { cr['overview'] = true; initOverview(); });
+</script>
+</body>
+</html>
