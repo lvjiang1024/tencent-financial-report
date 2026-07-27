@@ -181,7 +181,7 @@ footer{margin-top:36px;font-size:11.5px;color:var(--faint);line-height:1.7;borde
         <div class="field"><label>基准年 <span class="u">财年</span></label><input type="text" data-k="baseYear"></div>
         <div class="field"><label>总股本 <span class="u">亿股</span></label><input type="number" step="0.1" data-k="shares"></div>
         <div class="field"><label>汇率 1港元= <span class="u">人民币</span></label><input type="number" step="0.01" data-k="fx"></div>
-        <div class="field"><label>合理市盈率 <span class="u">倍（低利率封顶25×）</span></label><input type="number" step="0.5" data-k="pe"></div>
+        <div class="field"><label>合理市盈率 <span class="u">倍（保守取20×：监管/AI投入回报不确定性折价）</span></label><input type="number" step="0.5" data-k="pe"></div>
         <div class="field"><label>现价 <span class="u">港元</span></label><input type="number" step="0.1" data-k="price"></div>
         <div class="field"><label>预测年数 <span class="u">年</span></label><input type="number" step="1" data-k="years"></div>
       </div>
@@ -255,9 +255,9 @@ footer{margin-top:36px;font-size:11.5px;color:var(--faint);line-height:1.7;borde
 "use strict";
 const KEY="tencent-laotang-v1";
 const DEFAULTS={
-  baseNP:2596, baseYear:"2025", shares:90.1, fx:0.91, pe:25, price:460.2, years:3,
+  baseNP:2596, baseYear:"2025", shares:90.1, fx:0.91, pe:20, price:460.2, years:3,
   cagrOpt:15, cagrNeu:12, cagrPes:8,
-  assocProfit:250, coreCagr:12, corePE:25, listed:6727, unlisted:3631, portDiscount:100, netCash:1071,
+  assocProfit:250, coreCagr:12, corePE:20, listed:6727, unlisted:3631, portDiscount:100, netCash:1071,
   track:[
     {period:"2024A",     rev:6603,    revYoY:8.3, np:2227, npYoY:41, ttm:2227, fcf:1550, res:"",     price:""},
     {period:"2025A",     rev:7517.66, revYoY:14,  np:2596, npYoY:17, ttm:2596, fcf:1826, res:10358,  price:""},
