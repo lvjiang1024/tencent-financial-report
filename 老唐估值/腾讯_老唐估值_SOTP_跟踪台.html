@@ -1,0 +1,408 @@
+<meta charset="utf-8">
+<title>腾讯控股 · 老唐估值 + SOTP 跟踪台</title>
+<style>
+:root{
+  --ground:#F6F7F9; --surface:#FFFFFF; --surface-2:#FBFCFD;
+  --ink:#151A22; --muted:#5C6675; --faint:#8A94A3;
+  --hair:#E6E9EF; --hair-2:#EFF1F5;
+  --accent:#1F6FEB; --accent-soft:#EAF1FE;
+  --good:#12855F; --good-soft:#E4F3EC;
+  --warn:#B5810B; --warn-soft:#FBF1DA;
+  --crit:#C93C50; --crit-soft:#FBE7EA;
+  --shadow:0 1px 2px rgba(20,26,34,.04),0 4px 16px rgba(20,26,34,.05);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0D1015; --surface:#161B22; --surface-2:#1B212A;
+    --ink:#E7EBF1; --muted:#9AA4B3; --faint:#6C7686;
+    --hair:#232B36; --hair-2:#1E252F;
+    --accent:#57 8DF6; --accent:#578DF6; --accent-soft:#16233C;
+    --good:#3BB88A; --good-soft:#12271F;
+    --warn:#D9A63C; --warn-soft:#2A2412;
+    --crit:#E56377; --crit-soft:#2C1519;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.28);
+  }
+}
+:root[data-theme="light"]{
+  --ground:#F6F7F9; --surface:#FFFFFF; --surface-2:#FBFCFD;
+  --ink:#151A22; --muted:#5C6675; --faint:#8A94A3;
+  --hair:#E6E9EF; --hair-2:#EFF1F5;
+  --accent:#1F6FEB; --accent-soft:#EAF1FE;
+  --good:#12855F; --good-soft:#E4F3EC; --warn:#B5810B; --warn-soft:#FBF1DA;
+  --crit:#C93C50; --crit-soft:#FBE7EA;
+  --shadow:0 1px 2px rgba(20,26,34,.04),0 4px 16px rgba(20,26,34,.05);
+}
+:root[data-theme="dark"]{
+  --ground:#0D1015; --surface:#161B22; --surface-2:#1B212A;
+  --ink:#E7EBF1; --muted:#9AA4B3; --faint:#6C7686;
+  --hair:#232B36; --hair-2:#1E252F;
+  --accent:#578DF6; --accent-soft:#16233C;
+  --good:#3BB88A; --good-soft:#12271F; --warn:#D9A63C; --warn-soft:#2A2412;
+  --crit:#E56377; --crit-soft:#2C1519;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 72px;}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+
+/* header */
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;}
+.brand .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);font-weight:600;}
+.brand h1{font-size:26px;line-height:1.15;margin:4px 0 2px;font-weight:700;letter-spacing:-.01em;text-wrap:balance;}
+.brand .sub{color:var(--muted);font-size:13px;}
+.toolbar{display:flex;gap:8px;align-items:center;}
+.btn{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--surface);
+  border:1px solid var(--hair);border-radius:8px;padding:7px 12px;cursor:pointer;transition:.15s;}
+.btn:hover{color:var(--ink);border-color:var(--accent);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+/* verdict banner */
+.verdict{display:flex;flex-wrap:wrap;align-items:center;gap:18px;background:var(--surface);
+  border:1px solid var(--hair);border-left-width:4px;border-radius:12px;padding:16px 20px;
+  box-shadow:var(--shadow);margin-bottom:26px;}
+.verdict .tag{font-size:22px;font-weight:800;letter-spacing:.01em;}
+.verdict .metrics{display:flex;flex-wrap:wrap;gap:22px;margin-left:auto;}
+.vm{display:flex;flex-direction:column;}
+.vm .k{font-size:11px;color:var(--faint);letter-spacing:.04em;text-transform:uppercase;}
+.vm .v{font-size:17px;font-weight:700;margin-top:1px;}
+.tone-good{color:var(--good)} .tone-warn{color:var(--warn)} .tone-crit{color:var(--crit)} .tone-mid{color:var(--accent)}
+.bl-good{border-left-color:var(--good)} .bl-warn{border-left-color:var(--warn)} .bl-crit{border-left-color:var(--crit)} .bl-mid{border-left-color:var(--accent)}
+
+/* card */
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;
+  box-shadow:var(--shadow);margin-bottom:24px;overflow:hidden;}
+.card>.head{display:flex;align-items:baseline;gap:12px;padding:18px 22px 14px;border-bottom:1px solid var(--hair-2);}
+.card>.head .no{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;}
+.card>.head h2{font-size:17px;margin:0;font-weight:700;letter-spacing:-.005em;}
+.card>.head .hint{margin-left:auto;font-size:12px;color:var(--faint);}
+.card>.body{padding:18px 22px 22px;}
+
+/* assumptions grid */
+.assume{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px 18px;margin-bottom:20px;}
+.field{display:flex;flex-direction:column;gap:3px;}
+.field label{font-size:12px;color:var(--muted);display:flex;gap:5px;align-items:center;}
+.field .u{color:var(--faint);font-size:11px;}
+.field input{font:inherit;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;
+  color:var(--accent);background:var(--surface-2);border:1px solid var(--hair);border-radius:7px;
+  padding:7px 9px;width:100%;transition:.15s;}
+.field input:hover{border-color:var(--faint);}
+.field input:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-soft);}
+
+/* tables */
+.tbl-scroll{overflow-x:auto;margin:0 -2px;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--hair-2);white-space:nowrap;}
+th{font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);font-weight:600;
+  background:var(--surface-2);position:sticky;top:0;}
+th:first-child,td:first-child{text-align:left;}
+tbody tr:hover{background:var(--surface-2);}
+td.num,th.numh{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+tr.neutral{background:var(--accent-soft);}
+tr.neutral:hover{background:var(--accent-soft);}
+tr.neutral td:first-child{font-weight:700;}
+.scn{display:inline-flex;align-items:center;gap:6px;}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+
+/* tracking editable */
+.trk td{padding:5px 8px;}
+.trk input{font:inherit;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;
+  border:1px solid transparent;background:transparent;border-radius:5px;padding:4px 6px;width:100%;
+  text-align:right;color:var(--ink);transition:.12s;}
+.trk td:first-child input{text-align:left;color:var(--ink);font-weight:600;}
+.trk input:hover{border-color:var(--hair);}
+.trk input:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 2px var(--accent-soft);}
+.trk .derived{color:var(--muted);font-weight:600;}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:20px;line-height:1.5;}
+.p-good{background:var(--good-soft);color:var(--good);} .p-warn{background:var(--warn-soft);color:var(--warn);}
+.p-crit{background:var(--crit-soft);color:var(--crit);} .p-mid{background:var(--accent-soft);color:var(--accent);}
+.del{border:none;background:none;color:var(--faint);cursor:pointer;font-size:15px;line-height:1;padding:2px 4px;border-radius:5px;}
+.del:hover{color:var(--crit);background:var(--crit-soft);}
+.addrow{margin-top:12px;}
+
+/* callouts */
+.note{font-size:12.5px;color:var(--muted);line-height:1.6;background:var(--surface-2);
+  border:1px solid var(--hair-2);border-radius:9px;padding:12px 14px;margin-top:14px;}
+.note b{color:var(--ink);}
+.formula{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--surface-2);
+  border:1px dashed var(--hair);border-radius:8px;padding:10px 12px;margin-bottom:16px;overflow-x:auto;}
+.result-strip{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px;}
+.rs{flex:1 1 150px;background:var(--surface-2);border:1px solid var(--hair-2);border-radius:10px;padding:12px 14px;}
+.rs .k{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;}
+.rs .v{font-size:20px;font-weight:700;margin-top:3px;}
+.rs .v small{font-size:12px;color:var(--muted);font-weight:600;}
+.sotp-rows{width:100%;font-size:13.5px;margin-top:4px;}
+.sotp-rows td{border-bottom:1px dashed var(--hair-2);}
+.sotp-rows tr.total td{border-top:2px solid var(--hair);border-bottom:none;font-weight:700;font-size:15px;padding-top:11px;}
+footer{margin-top:36px;font-size:11.5px;color:var(--faint);line-height:1.7;border-top:1px solid var(--hair);padding-top:16px;}
+.saveflash{font-size:11.5px;color:var(--good);opacity:0;transition:opacity .3s;}
+.saveflash.on{opacity:1;}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+@media (max-width:640px){.wrap{padding:20px 14px 60px;} .verdict .metrics{margin-left:0;gap:14px;} .brand h1{font-size:22px;}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="eyebrow">老唐估值法 · 逐季跟踪台</div>
+      <h1>腾讯控股 <span class="num" style="font-weight:600;color:var(--muted);font-size:20px">00700.HK</span></h1>
+      <div class="sub">改动任意蓝色数字，全部估值即时重算并自动保存在本浏览器。本页不构成投资建议。</div>
+    </div>
+    <div class="toolbar">
+      <span class="saveflash" id="saveflash">已保存 ✓</span>
+      <button class="btn" id="resetBtn" title="恢复到初始数据">重置为初始值</button>
+      <button class="btn" id="themeBtn" title="切换深/浅色">◐ 主题</button>
+    </div>
+  </header>
+
+  <div class="verdict" id="verdict">
+    <div>
+      <div class="vm" style="margin-bottom:2px"><span class="k">当前定位（简化估值·中性）</span></div>
+      <div class="tag" id="vTag">—</div>
+    </div>
+    <div class="metrics">
+      <div class="vm"><span class="k">现价</span><span class="v num" id="vPrice">—</span></div>
+      <div class="vm"><span class="k">动态PE(Non-IFRS)</span><span class="v num" id="vPE">—</span></div>
+      <div class="vm"><span class="k">对中性合理值</span><span class="v num" id="vDisc">—</span></div>
+      <div class="vm"><span class="k">中性理想买点</span><span class="v num" id="vBuy">—</span></div>
+    </div>
+  </div>
+
+  <!-- 1. 简化估值 -->
+  <section class="card">
+    <div class="head"><span class="no">01</span><h2>老唐简化估值 · 净利 × PE</h2>
+      <span class="hint">合理估值 = 第三年净利 × 合理PE；买点 = 五折；卖点 = min(净利×50, 合理×1.5)</span></div>
+    <div class="body">
+      <div class="assume">
+        <div class="field"><label>基准年 Non-IFRS 归母净利 <span class="u">亿元</span></label><input type="number" step="1" data-k="baseNP"></div>
+        <div class="field"><label>基准年 <span class="u">财年</span></label><input type="text" data-k="baseYear"></div>
+        <div class="field"><label>总股本 <span class="u">亿股</span></label><input type="number" step="0.1" data-k="shares"></div>
+        <div class="field"><label>汇率 1港元= <span class="u">人民币</span></label><input type="number" step="0.01" data-k="fx"></div>
+        <div class="field"><label>合理市盈率 <span class="u">倍（低利率封顶25×）</span></label><input type="number" step="0.5" data-k="pe"></div>
+        <div class="field"><label>现价 <span class="u">港元</span></label><input type="number" step="0.1" data-k="price"></div>
+        <div class="field"><label>预测年数 <span class="u">年</span></label><input type="number" step="1" data-k="years"></div>
+      </div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>情景</th><th class="numh">三年CAGR</th><th class="numh">第三年净利(亿)</th>
+            <th class="numh">合理估值(亿RMB)</th><th class="numh">合理/股(RMB)</th><th class="numh">合理/股(HK$)</th>
+            <th class="numh">理想买点(HK$)</th><th class="numh">卖点(HK$)</th></tr></thead>
+          <tbody id="scnBody"></tbody>
+        </table>
+      </div>
+      <div class="note"><b>解读：</b><span id="simpleRead">—</span></div>
+    </div>
+  </section>
+
+  <!-- 2. SOTP -->
+  <section class="card">
+    <div class="head"><span class="no">02</span><h2>分部加总估值 · SOTP（主业 + 投资组合）</h2>
+      <span class="hint">解决“联营利润 vs 投资组合”双算问题</span></div>
+    <div class="body">
+      <div class="formula">合理市值 = 核心主业净利(剔除联营)×PE ＋ 投资组合(上市公允+非上市账面)×折扣 ＋ 净现金　→　÷总股本÷汇率 = 每股(HK$)　→　×0.5 = 买点</div>
+      <div class="assume">
+        <div class="field"><label>应占联营/合营利润 <span class="u">亿·从净利中剔除</span></label><input type="number" step="10" data-k="assocProfit"></div>
+        <div class="field"><label>核心主业三年CAGR <span class="u">%</span></label><input type="number" step="0.5" data-k="coreCagr"></div>
+        <div class="field"><label>主业合理市盈率 <span class="u">倍</span></label><input type="number" step="0.5" data-k="corePE"></div>
+        <div class="field"><label>上市投资公允价值 <span class="u">亿元</span></label><input type="number" step="10" data-k="listed"></div>
+        <div class="field"><label>非上市投资账面值 <span class="u">亿元</span></label><input type="number" step="10" data-k="unlisted"></div>
+        <div class="field"><label>投资组合折扣 <span class="u">%（安全边际）</span></label><input type="number" step="5" data-k="portDiscount"></div>
+        <div class="field"><label>净现金 <span class="u">亿元</span></label><input type="number" step="10" data-k="netCash"></div>
+      </div>
+      <div class="tbl-scroll">
+        <table class="sotp-rows"><tbody id="sotpBody"></tbody></table>
+      </div>
+      <div class="result-strip">
+        <div class="rs"><div class="k">合理估值 / 股</div><div class="v num"><span id="sotpFairHKD">—</span> <small>HK$</small></div></div>
+        <div class="rs"><div class="k">理想买点 / 股（五折）</div><div class="v num"><span id="sotpBuyHKD">—</span> <small>HK$</small></div></div>
+        <div class="rs"><div class="k">现价对合理值</div><div class="v num" id="sotpDisc">—</div></div>
+        <div class="rs"><div class="k">SOTP 定位</div><div class="v" id="sotpPos">—</div></div>
+      </div>
+      <div class="note"><b>口径说明：</b>联营公司（拼多多、快手、富途等）的价值已计入“上市投资公允价值”，故主业净利须先<b>剔除应占联营利润</b>，二者不重复计价。投资组合按<b>当前值</b>计入、假设三年不增长，属保守处理（安全垫）；可用“折扣%”对流动性/潜在处置税再打折。</div>
+    </div>
+  </section>
+
+  <!-- 3. 季度跟踪 -->
+  <section class="card">
+    <div class="head"><span class="no">03</span><h2>季度跟踪表</h2>
+      <span class="hint">每次财报后加一行，蓝框手工录入，灰色列自动算</span></div>
+    <div class="body">
+      <div class="tbl-scroll">
+        <table class="trk">
+          <thead><tr>
+            <th>报告期</th><th class="numh">营收(亿)</th><th class="numh">营收YoY</th>
+            <th class="numh">Non-IFRS归母(亿)</th><th class="numh">净利YoY</th>
+            <th class="numh">TTM净利(亿)</th><th class="numh">自由现金流(亿)</th>
+            <th class="numh">投资组合/水库(亿)</th><th class="numh">期末股价(HK$)</th>
+            <th class="numh">市值(亿HK$)</th><th class="numh">动态PE</th><th class="numh">对合理值</th>
+            <th>定位</th><th></th>
+          </tr></thead>
+          <tbody id="trkBody"></tbody>
+        </table>
+      </div>
+      <button class="btn addrow" id="addRow">＋ 新增一行</button>
+      <div class="note"><b>TTM净利</b>用于算PE：全年行=当年；季度行≈上年全年−上年同季+本季。<b>水库</b>=递延收入/合同负债或投资组合期末值，回升=需求改善/资产增值。定位与折价均对“简化估值·中性”口径计算。</div>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+"use strict";
+const KEY="tencent-laotang-v1";
+const DEFAULTS={
+  baseNP:2596, baseYear:"2025", shares:90.1, fx:0.91, pe:25, price:460.2, years:3,
+  cagrOpt:15, cagrNeu:12, cagrPes:8,
+  assocProfit:250, coreCagr:12, corePE:25, listed:6727, unlisted:3631, portDiscount:100, netCash:1071,
+  track:[
+    {period:"2024A",     rev:6603,    revYoY:8.3, np:2227, npYoY:41, ttm:2227, fcf:1550, res:"",     price:""},
+    {period:"2025A",     rev:7517.66, revYoY:14,  np:2596, npYoY:17, ttm:2596, fcf:1826, res:10358,  price:""},
+    {period:"2026Q1",    rev:1965,    revYoY:9,   np:680,  npYoY:11, ttm:2663, fcf:"",   res:"",     price:""},
+    {period:"2026-07-27",rev:"",      revYoY:"",  np:"",   npYoY:"", ttm:2663, fcf:"",   res:"",     price:460.2}
+  ]
+};
+let S=load();
+function load(){try{const o=JSON.parse(localStorage.getItem(KEY));if(o&&o.track)return Object.assign(structuredClone(DEFAULTS),o);}catch(e){}return structuredClone(DEFAULTS);}
+let saveT;
+function save(){localStorage.setItem(KEY,JSON.stringify(S));const f=document.getElementById("saveflash");f.classList.add("on");clearTimeout(saveT);saveT=setTimeout(()=>f.classList.remove("on"),1200);}
+
+const N=v=>{const x=parseFloat(v);return isFinite(x)?x:0;};
+const has=v=>v!==""&&v!==null&&v!==undefined&&isFinite(parseFloat(v));
+const fmt=(n,d=0)=>n==null||!isFinite(n)?"—":n.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=n=>n==null||!isFinite(n)?"—":(n>=0?"+":"")+(n*100).toFixed(1)+"%";
+
+function simplified(){
+  const {baseNP,shares,fx,pe,years}=S;
+  const mk=cagr=>{const np3=baseNP*Math.pow(1+cagr/100,years);const fairR=np3*pe;const fairS=fairR/shares;
+    const fairH=fairS/fx;return{cagr,np3,fairR,fairS,fairH,buyH:fairH*0.5,
+      sellH:Math.min(np3*50,fairR*1.5)/shares/fx};};
+  return{opt:mk(S.cagrOpt),neu:mk(S.cagrNeu),pes:mk(S.cagrPes)};
+}
+function positionOf(priceHKD,neu,pes){
+  if(!has(priceHKD))return{label:"—",tone:"mid"};
+  const p=N(priceHKD);
+  if(p<=pes.buyH)return{label:"深度低估",tone:"good"};
+  if(p<=neu.buyH)return{label:"低估",tone:"good"};
+  if(p<neu.fairH)return{label:"合理偏低",tone:"mid"};
+  if(p<neu.sellH)return{label:"合理/偏高",tone:"warn"};
+  return{label:"卖出区",tone:"crit"};
+}
+
+function render(){
+  // bind assumption inputs
+  document.querySelectorAll("input[data-k]").forEach(i=>{if(document.activeElement!==i)i.value=S[i.dataset.k];});
+  const sc=simplified();
+  // scenario table
+  const rows=[["乐观","opt","var(--good)"],["中性","neu","var(--accent)"],["悲观","pes","var(--warn)"]];
+  document.getElementById("scnBody").innerHTML=rows.map(([nm,k,c])=>{const d=sc[k];
+    return `<tr class="${k==='neu'?'neutral':''}"><td><span class="scn"><span class="dot" style="background:${c}"></span>${nm}</span></td>
+      <td class="num">${d.cagr.toFixed(1)}%</td><td class="num">${fmt(d.np3)}</td><td class="num">${fmt(d.fairR)}</td>
+      <td class="num">${fmt(d.fairS,1)}</td><td class="num"><b>${fmt(d.fairH,1)}</b></td>
+      <td class="num" style="color:var(--good)">${fmt(d.buyH,1)}</td><td class="num" style="color:var(--crit)">${fmt(d.sellH,1)}</td></tr>`;}).join("");
+
+  // verdict
+  const price=S.price;
+  const pos=positionOf(price,sc.neu,sc.pes);
+  const mcapHKD=N(price)*S.shares, dynPE=N(price)*S.shares*S.fx/S.baseNP;
+  const disc=N(price)/sc.neu.fairH-1, vsBuy=N(price)/sc.neu.buyH-1;
+  const vb=document.getElementById("verdict");
+  vb.className="verdict bl-"+pos.tone;
+  const vt=document.getElementById("vTag");vt.textContent=pos.label;vt.className="tag tone-"+pos.tone;
+  document.getElementById("vPrice").textContent="HK$"+fmt(N(price),1);
+  document.getElementById("vPE").textContent=fmt(dynPE,1)+"x";
+  const vd=document.getElementById("vDisc");vd.textContent=pct(disc);vd.className="v num tone-"+(disc<0?"good":"crit");
+  document.getElementById("vBuy").textContent="HK$"+fmt(sc.neu.buyH,1);
+
+  document.getElementById("simpleRead").innerHTML=
+    `现价 HK$${fmt(N(price),1)}，市值约 ${fmt(mcapHKD)} 亿港元，动态 PE(Non-IFRS) ≈ <b>${fmt(dynPE,1)}×</b>。`+
+    `对中性合理值 HK$${fmt(sc.neu.fairH,1)} 折/溢价 <b class="tone-${disc<0?'good':'crit'}">${pct(disc)}</b>；`+
+    `对中性买点 HK$${fmt(sc.neu.buyH,1)} ${vsBuy<0?"还低":"高"} <b>${pct(Math.abs(vsBuy)*(vsBuy<0?-1:1)).replace('+','')}</b>。`+
+    `连悲观买点为 HK$${fmt(sc.pes.buyH,1)}。<b>定位：${pos.label}。</b>`;
+
+  // SOTP
+  const coreNP=S.baseNP-S.assocProfit;
+  const core3=coreNP*Math.pow(1+S.coreCagr/100,3);
+  const coreVal=core3*S.corePE;
+  const portVal=(S.listed+S.unlisted)*S.portDiscount/100;
+  const totR=coreVal+portVal+S.netCash;
+  const fairH=totR/S.shares/S.fx, buyH=fairH*0.5;
+  const sDisc=N(price)/fairH-1;
+  const sPos=(()=>{const p=N(price);if(!has(price))return{label:"—",tone:"mid"};
+    if(p<=buyH)return{label:"低于买点·低估",tone:"good"};
+    if(p<fairH)return{label:"买点与合理值之间",tone:"mid"};
+    if(p<fairH*1.5)return{label:"合理/偏高",tone:"warn"};return{label:"卖出区",tone:"crit"};})();
+  document.getElementById("sotpBody").innerHTML=[
+    ["核心主业净利（基准年 Non-IFRS 归母 − 应占联营）",`${fmt(coreNP)} 亿`],
+    [`　→ 第三年核心净利（CAGR ${S.coreCagr}%）`,`${fmt(core3)} 亿`],
+    [`主业合理估值　= 第三年核心净利 × ${S.corePE}×`,`${fmt(coreVal)} 亿`],
+    [`＋ 投资组合　（上市 ${fmt(S.listed)} + 非上市 ${fmt(S.unlisted)}）× ${S.portDiscount}%`,`${fmt(portVal)} 亿`],
+    ["＋ 净现金",`${fmt(S.netCash)} 亿`],
+  ].map(([a,b])=>`<tr><td style="text-align:left;color:var(--muted)">${a}</td><td class="num">${b}</td></tr>`).join("")
+   +`<tr class="total"><td style="text-align:left">合理总市值（人民币）</td><td class="num">${fmt(totR)} 亿</td></tr>`;
+  document.getElementById("sotpFairHKD").textContent=fmt(fairH,1);
+  document.getElementById("sotpBuyHKD").textContent=fmt(buyH,1);
+  const sd=document.getElementById("sotpDisc");sd.textContent=pct(sDisc);sd.className="v num tone-"+(sDisc<0?"good":"crit");
+  const sp=document.getElementById("sotpPos");sp.textContent=sPos.label;sp.className="v tone-"+sPos.tone;
+
+  renderTrack(sc);
+  document.getElementById("footer").innerHTML=
+    `估值口径：人民币亿元 / 股价港元；总股本按 ${S.shares} 亿股、汇率 1港元=${S.fx}人民币。`+
+    `数据来源：腾讯 2025 年报（2026-03 披露）与 2026Q1 业绩（2026-05 披露）。`+
+    `合理PE在低利率环境封顶 ${S.pe}×，属保守锚而非精确值——结论对该取值高度敏感。`+
+    `编辑内容仅保存在当前浏览器本地。<b>本页不构成投资建议。</b>`;
+}
+
+function renderTrack(sc){
+  const tb=document.getElementById("trkBody");
+  tb.innerHTML=S.track.map((r,i)=>{
+    const price=r.price, mcap=has(price)?N(price)*S.shares:null;
+    const pe=has(price)&&has(r.ttm)?N(price)*S.shares*S.fx/N(r.ttm):null;
+    const disc=has(price)?N(price)/sc.neu.fairH-1:null;
+    const pos=positionOf(price,sc.neu,sc.pes);
+    const inp=(k,ph="")=>`<input data-row="${i}" data-f="${k}" value="${r[k]??""}" placeholder="${ph}">`;
+    return `<tr>
+      <td>${inp("period")}</td><td>${inp("rev")}</td><td>${inp("revYoY")}</td>
+      <td>${inp("np")}</td><td>${inp("npYoY")}</td><td>${inp("ttm")}</td>
+      <td>${inp("fcf")}</td><td>${inp("res")}</td><td>${inp("price")}</td>
+      <td class="num derived">${mcap==null?"—":fmt(mcap)}</td>
+      <td class="num derived">${pe==null?"—":fmt(pe,1)+"x"}</td>
+      <td class="num derived" style="color:${disc==null?'inherit':(disc<0?'var(--good)':'var(--crit)')}">${disc==null?"—":pct(disc)}</td>
+      <td>${has(price)?`<span class="pill p-${pos.tone}">${pos.label}</span>`:"—"}</td>
+      <td><button class="del" data-del="${i}" title="删除此行">✕</button></td>
+    </tr>`;}).join("");
+}
+
+// events
+document.addEventListener("input",e=>{
+  const el=e.target;
+  if(el.dataset.k){S[el.dataset.k]=el.type==="number"?N(el.value):el.value;render();save();}
+  else if(el.dataset.row!==undefined){
+    const i=+el.dataset.row,f=el.dataset.f;S.track[i][f]=el.value;
+    // update only derived cells of this row to preserve focus
+    const sc=simplified(),r=S.track[i],tr=el.closest("tr");
+    const price=r.price,mcap=has(price)?N(price)*S.shares:null;
+    const pe=has(price)&&has(r.ttm)?N(price)*S.shares*S.fx/N(r.ttm):null;
+    const disc=has(price)?N(price)/sc.neu.fairH-1:null,pos=positionOf(price,sc.neu,sc.pes);
+    const tds=tr.querySelectorAll("td");
+    tds[9].textContent=mcap==null?"—":fmt(mcap);
+    tds[10].textContent=pe==null?"—":fmt(pe,1)+"x";
+    tds[11].textContent=disc==null?"—":pct(disc);tds[11].style.color=disc==null?"inherit":(disc<0?"var(--good)":"var(--crit)");
+    tds[12].innerHTML=has(price)?`<span class="pill p-${pos.tone}">${pos.label}</span>`:"—";
+    if(f==="price"||f==="ttm"){render();} // verdict etc unaffected by rows, but keep light
+    save();
+  }
+});
+document.addEventListener("click",e=>{
+  if(e.target.dataset.del!==undefined){S.track.splice(+e.target.dataset.del,1);render();save();}
+});
+document.getElementById("addRow").onclick=()=>{S.track.push({period:"新报告期",rev:"",revYoY:"",np:"",npYoY:"",ttm:"",fcf:"",res:"",price:""});render();save();};
+document.getElementById("resetBtn").onclick=()=>{if(confirm("恢复到初始数据？当前所有编辑将被清除。")){S=structuredClone(DEFAULTS);render();save();}};
+document.getElementById("themeBtn").onclick=()=>{const r=document.documentElement;
+  const cur=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+  r.setAttribute("data-theme",cur==="dark"?"light":"dark");};
+render();
+</script>
