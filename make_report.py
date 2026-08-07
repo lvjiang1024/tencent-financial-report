@@ -12,6 +12,8 @@ with open(os.path.join(ROOT, '腾讯控股_raw_extract.json'), encoding='utf-8')
     RAW = json.load(f)
 with open(os.path.join(ROOT, '腾讯控股_supplement.json'), encoding='utf-8') as f:
     SUPP = json.load(f)
+with open(os.path.join(ROOT, '腾讯控股_现金流质量.json'), encoding='utf-8') as f:
+    CFQ = {r['年份']: r for r in json.load(f)}
 
 YI = 100.0  # RMB Million -> 亿元
 
@@ -122,6 +124,30 @@ for y in YEARS:
 
 DPS = [SUPP['dps'].get(str(y)) for y in YEARS]                     # 港元/股，拆股调整后
 NIFRS_OP = [round(SUPP['nifrs_op'][str(y)]/YI, 1) if str(y) in SUPP['nifrs_op'] else None for y in YEARS]
+
+# ---------------- 现金流质量（2004-2025，来自年报现金流量表与资产负债表） ----------------
+def _cfq(key):
+    out = []
+    for y in YEARS:
+        v = CFQ.get(y, {}).get(key)
+        out.append(round(v/YI, 1) if v is not None else None)
+    return out
+
+OCF        = _cfq('经营现金流')
+CAPEX_CF   = _cfq('资本开支')       # 购建固定资产+无形资产（现金流量表口径）
+FCF_CF     = _cfq('自由现金流')     # OCF − 上述资本开支
+DIVIDEND   = _cfq('分红')
+BUYBACK    = _cfq('回购')
+CASH_BAL   = _cfq('现金余额')       # 期末现金及现金等价物（不含定期存款）
+DEBT       = _cfq('有息负债')       # 借款+应付票据（流动+非流动）
+
+SHAREHOLDER_RET = [
+    None if (d is None and b is None) else round((d or 0) + (b or 0), 1)
+    for d, b in zip(DIVIDEND, BUYBACK)
+]
+# 净现比双口径：IFRS 净利润受非现金投资损益扰动，Non-GAAP 口径更能反映主业含金量
+NCR_IFRS = [round(o/a*100, 1) if (o is not None and a) else None for o, a in zip(OCF, ATTR)]
+NCR_NG   = [round(o/n*100, 1) if (o is not None and n) else None for o, n in zip(OCF, NIFRS)]
 
 # ---------------- 季度追踪（2019-2026） ----------------
 # PDF 摘要表在个别年份（如 2022/2023）把"三个月"表误判为"H1"、把"全年"表误判为"Q4"，
@@ -261,6 +287,30 @@ for i, y in enumerate(YEARS):
         <td>{fmt(NA[i])}</td>
         <td>{f'{ROE[i]:.1f}%' if ROE[i] is not None else '—'}</td>
         <td>{tags}</td>
+      </tr>'''
+
+cfq_rows_html = ''
+for i, y in enumerate(YEARS):
+    def cf(v, nd=0):
+        return f'{v:,.{nd}f}' if v is not None else '—'
+    def ratio(v):
+        if v is None:
+            return '—'
+        cls = 'tag-up' if v >= 100 else 'tag-down'
+        return f'<span class="{cls}">{v:.0f}%</span>'
+    cfq_rows_html += f'''
+      <tr>
+        <td>{y}</td>
+        <td>{cf(OCF[i])}</td>
+        <td>{cf(ATTR[i])}</td>
+        <td>{ratio(NCR_IFRS[i])}</td>
+        <td>{ratio(NCR_NG[i])}</td>
+        <td>{cf(CAPEX_CF[i])}</td>
+        <td>{cf(FCF_CF[i])}</td>
+        <td>{cf(DIVIDEND[i])}</td>
+        <td>{cf(BUYBACK[i])}</td>
+        <td>{cf(CASH_BAL[i])}</td>
+        <td>{cf(DEBT[i])}</td>
       </tr>'''
 
 supp_rows_html = ''
@@ -415,6 +465,7 @@ html = f'''<!DOCTYPE html>
   <button id="btn-growth">🚀 增长分析</button>
   <button id="btn-quality">💰 利润质量</button>
   <button id="btn-cashflow">🌊 现金流</button>
+  <button id="btn-cfquality">💧 现金流质量</button>
   <button id="btn-quarterly">📅 季度追踪</button>
   <button id="btn-detail">📋 数据明细</button>
   <button id="btn-mgmt">💬 管理层观点</button>
@@ -459,6 +510,25 @@ html = f'''<!DOCTYPE html>
   <div class="summary-box"><h3>📌 现金流与资本开支</h3><p>自由现金流（FCF）为公司自行披露口径：经营活动现金流减去资本开支、媒体内容开支及租赁负债付款。年度 FCF 为四个季度加总（估算）。<span class="hl">2024 年起资本开支跳升至 768 亿元、2025 年达 792 亿元</span>，主要投向 AI 算力与数据中心基础设施——这是当前腾讯财务叙事的核心变量：Capex 高企但核心业务现金创造能力仍在增强。</p></div>
   <div class="chart-row single full"><div class="chart-block"><h3>季度自由现金流 & 资本开支（2019Q1—2026Q1，亿元）</h3><canvas id="chart_fc_q"></canvas></div></div>
   <div class="chart-row"><div class="chart-block"><h3>年度自由现金流 vs 归母净利润（亿元，FCF为四季加总估算）</h3><canvas id="chart_fcf_np"></canvas></div><div class="chart-block"><h3>年度资本开支（亿元，官方全年披露值）</h3><canvas id="chart_capex_fy"></canvas></div></div>
+</div>
+
+<div class="section" id="sec-cfquality">
+  <div class="summary-box"><h3>📌 利润含金量：赚的是不是真钱</h3><p>利润表可以修饰，现金流量表很难。核心结论：<span class="hl">腾讯自 2005 年起，经营活动现金流连续 21 年为正且几乎每年都高于净利润</span>——2004 年（上市当年）是唯一的负值。<br><br><b>⚠️ 一个重要的口径说明：收现比无法计算。</b>A 股中国会计准则要求用<b>直接法</b>披露「销售商品、提供劳务收到的现金」，可直接算收现比；腾讯按 IFRS 用<b>间接法</b>编制现金流量表，从税前利润倒推，报表中<b>根本不存在该科目</b>。因此这里改用<b>净现比（经营现金流÷净利润）</b>作为主要含金量指标，并同时给出 IFRS 与 Non-GAAP 两个口径。</p></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>经营活动现金流 vs 净利润（亿元）——两线贴合说明利润有现金支撑</h3><canvas id="chart_cfq_ocf"></canvas></div></div>
+  <div class="chart-row single full"><div class="chart-block"><h3>净现比双口径对比（%，100% 为界）——IFRS 的剧烈波动是分母失真，非现金流恶化</h3><canvas id="chart_cfq_ncr"></canvas></div></div>
+  <div class="chart-row"><div class="chart-block"><h3>现金去向：自由现金流 / 资本开支 / 股东回报（亿元）</h3><canvas id="chart_cfq_use"></canvas></div><div class="chart-block"><h3>现金余额 vs 有息负债（亿元）</h3><canvas id="chart_cfq_debt"></canvas></div></div>
+  <div class="chart-block"><h3>📋 现金流质量明细（2004—2025，亿元）</h3><div class="table-scroll"><table class="data-table"><thead><tr><th>年份</th><th>经营现金流</th><th>归母净利润</th><th>净现比(IFRS)</th><th>净现比(Non-GAAP)</th><th>资本开支</th><th>自由现金流</th><th>分红</th><th>回购</th><th>现金余额</th><th>有息负债</th></tr></thead><tbody>{cfq_rows_html}</tbody></table></div>
+    <div style="font-size:12px;color:var(--text-secondary);line-height:1.9;margin-top:12px">
+      <b>口径说明（务必阅读）：</b><br>
+      · <b>收现比不可计算</b>：IFRS 间接法不披露「销售商品、提供劳务收到的现金」，与 A 股直接法报表无法对齐。<br>
+      · <b>资本开支</b>＝现金流量表「购建物业设备及器材/在建工程/投资物业」＋「购买无形资产」，与公司在业绩公告中自行定义的 capital expenditures（含数据中心、土地使用权等）口径不同，故本表 2025 年为 1,129 亿，公司口径为 792 亿。<br>
+      · <b>自由现金流</b>＝经营现金流 − 上述资本开支，未扣除媒体内容开支与租赁负债本金，故高于公司披露的 FCF（2025 年公司口径 1,826 亿）。<br>
+      · <b>现金余额</b>仅为「现金及现金等价物」，不含定期存款。2025 年另有定期存款 3,071 亿，故账面虽有 3,877 亿有息负债，加回定期存款后仍为<b>净现金约 604 亿</b>。<br>
+      · <b>单位换算</b>：2004—2012 年报以人民币千元列示，已统一折算为百万元再转亿元。<br>
+      · <b>两处公司重新列报</b>：2007 年 OCF 原报 15.4 亿、2008 年报重列为 18.4 亿；2018 年原报 1,064 亿、2019 年报重新列报为 1,109 亿。本表采用各年年报<b>当年原始披露值</b>。<br>
+      · 数据来源：2004—2025 各年度年报现金流量表与综合财务状况表原文提取，逐年勾稽校验（21 组对照中 19 组完全一致，2 组差异即上述公司重列）。
+    </div>
+  </div>
 </div>
 
 <div class="section" id="sec-quarterly">
@@ -522,6 +592,16 @@ const FC_FCF = {js(FC_FCF)};
 const FC_CAPEX = {js(FC_CAPEX)};
 const FCF_FY = {js(FCF_FY)};
 const CAPEX_FY = {js(CAPEX_FY)};
+const OCF_V = {js(OCF)};
+const CAPEX_CF_V = {js(CAPEX_CF)};
+const FCF_CF_V = {js(FCF_CF)};
+const DIVIDEND_V = {js(DIVIDEND)};
+const BUYBACK_V = {js(BUYBACK)};
+const SHRET_V = {js(SHAREHOLDER_RET)};
+const CASH_BAL_V = {js(CASH_BAL)};
+const DEBT_V = {js(DEBT)};
+const NCR_IFRS_V = {js(NCR_IFRS)};
+const NCR_NG_V = {js(NCR_NG)};
 const REV_G = {js(REV_G)};
 const ATTR_G = {js(ATTR_G)};
 const GROSS_MARGIN = {js(GROSS_MARGIN)};
@@ -541,12 +621,12 @@ function showTab(id) {{
   document.getElementById('sec-' + id).classList.add('active');
   document.getElementById('btn-' + id).classList.add('active');
   if (!cr[id]) {{ cr[id] = true;
-    var f = {{ overview: initOverview, core: initCore, revenue: initRevenue, returns: initReturns, growth: initGrowth, quality: initQuality, cashflow: initCashflow, quarterly: initQuarterly, mgmt: initMgmtTimeline }};
+    var f = {{ overview: initOverview, core: initCore, revenue: initRevenue, returns: initReturns, growth: initGrowth, quality: initQuality, cashflow: initCashflow, cfquality: initCfQuality, quarterly: initQuarterly, mgmt: initMgmtTimeline }};
     if (f[id]) f[id]();
   }}
 }}
 
-['overview','core','revenue','returns','growth','quality','cashflow','quarterly','detail','mgmt'].forEach(function(id) {{
+['overview','core','revenue','returns','growth','quality','cashflow','cfquality','quarterly','detail','mgmt'].forEach(function(id) {{
   document.getElementById('btn-' + id).addEventListener('click', function() {{ showTab(id); }});
 }});
 
@@ -691,6 +771,40 @@ function initQuality() {{
   new Chart(document.getElementById('chart_gross'), {{ type: 'bar',
     data: {{ labels: REV_Y, datasets: [{{ label: '毛利润(亿)', data: GROSS_V, backgroundColor: C[3] + '99' }}] }},
     options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }} }}
+  }});
+}}
+
+function initCfQuality() {{
+  new Chart(document.getElementById('chart_cfq_ocf'), {{ type: 'line',
+    data: {{ labels: REV_Y, datasets: [
+      {{ label: '经营活动现金流净额(亿)', data: OCF_V, borderColor: C[0], tension: 0.2, pointRadius: 3, borderWidth: 3, spanGaps: true }},
+      {{ label: 'IFRS归母净利润(亿)', data: ATTR_V, borderColor: C[1], borderDash: [6,4], tension: 0.2, pointRadius: 3, borderWidth: 2 }},
+      {{ label: 'Non-GAAP归母净利润(亿)', data: NIFRS_V, borderColor: C[3], borderDash: [2,3], tension: 0.2, pointRadius: 3, borderWidth: 2, spanGaps: true }}
+    ] }},
+    options: {{ responsive: true, plugins: {{ legend: {{ position: 'top' }} }}, scales: {{ y: {{ title: {{ display: true, text: '亿元' }} }} }} }}
+  }});
+  new Chart(document.getElementById('chart_cfq_ncr'), {{ type: 'bar',
+    data: {{ labels: REV_Y, datasets: [
+      {{ label: '净现比 IFRS口径%', data: NCR_IFRS_V, backgroundColor: NCR_IFRS_V.map(function(v) {{ return (v!==null&&v>=100) ? C[2]+'99' : '#C6282899'; }}) }},
+      {{ label: '净现比 Non-GAAP口径%', data: NCR_NG_V, backgroundColor: C[0]+'CC' }}
+    ] }},
+    options: {{ responsive: true, plugins: {{ legend: {{ position: 'top' }} }},
+      scales: {{ y: {{ title: {{ display: true, text: '净现比 %' }}, suggestedMin: 0 }} }} }}
+  }});
+  new Chart(document.getElementById('chart_cfq_use'), {{ type: 'bar',
+    data: {{ labels: REV_Y, datasets: [
+      {{ label: '自由现金流(亿)', data: FCF_CF_V, backgroundColor: C[0]+'99' }},
+      {{ label: '资本开支(亿)', data: CAPEX_CF_V, backgroundColor: C[1]+'99' }},
+      {{ label: '股东回报 分红+回购(亿)', data: SHRET_V, backgroundColor: C[3]+'99' }}
+    ] }},
+    options: {{ responsive: true, plugins: {{ legend: {{ position: 'top' }} }}, scales: {{ y: {{ title: {{ display: true, text: '亿元' }} }} }} }}
+  }});
+  new Chart(document.getElementById('chart_cfq_debt'), {{ type: 'line',
+    data: {{ labels: REV_Y, datasets: [
+      {{ label: '现金及等价物(亿)', data: CASH_BAL_V, borderColor: C[0], tension: 0.2, pointRadius: 3, borderWidth: 3, spanGaps: true }},
+      {{ label: '有息负债(亿)', data: DEBT_V, borderColor: C[1], tension: 0.2, pointRadius: 3, borderWidth: 2, spanGaps: true }}
+    ] }},
+    options: {{ responsive: true, plugins: {{ legend: {{ position: 'top' }} }}, scales: {{ y: {{ title: {{ display: true, text: '亿元' }} }} }} }}
   }});
 }}
 
