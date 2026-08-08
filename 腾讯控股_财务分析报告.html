@@ -57,6 +57,22 @@
   @media(max-width:768px){ .kpi-row{grid-template-columns:1fr 1fr;} .chart-row{grid-template-columns:1fr;} .hero h1{font-size:26px;} .stats-grid{grid-template-columns:1fr 1fr;} }
   @media(max-width:1024px) and (min-width:769px){ .kpi-row{grid-template-columns:repeat(3,1fr);} }
 
+  /* 老唐估值 Tab */
+  .lt-verdict { display:flex; flex-wrap:wrap; align-items:center; gap:18px; background:var(--white); border:1px solid var(--border); border-left:4px solid var(--teal); border-radius:12px; padding:16px 20px; box-shadow:0 4px 20px rgba(0,60,64,.06); margin-bottom:20px; }
+  .lt-verdict .tag { font-size:22px; font-weight:800; color:var(--teal); }
+  .lt-verdict .metrics { display:flex; flex-wrap:wrap; gap:22px; margin-left:auto; }
+  .lt-vm { display:flex; flex-direction:column; }
+  .lt-vm .k { font-size:11px; color:var(--text-secondary); letter-spacing:.04em; }
+  .lt-vm .v { font-size:17px; font-weight:700; margin-top:1px; color:var(--navy); }
+  .lt-assume { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px 18px; }
+  .lt-field { display:flex; flex-direction:column; gap:3px; }
+  .lt-field label { font-size:12px; color:var(--text-secondary); }
+  .lt-field .u { color:#9AA4B3; font-size:11px; }
+  .lt-field input { font-family:inherit; font-size:15px; font-weight:600; color:var(--teal); background:#FBFCFD; border:1px solid var(--border); border-radius:7px; padding:7px 9px; width:100%; }
+  .lt-field input:focus { outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(0,109,119,.12); }
+  .lt-note { font-size:12.5px; color:var(--text-secondary); line-height:1.8; background:#F5F8F8; border:1px solid var(--border); border-radius:9px; padding:12px 14px; margin-top:14px; }
+  .lt-note b { color:var(--navy); }
+  .lt-hl { background:#FFF3CD; padding:1px 5px; border-radius:4px; font-weight:600; }
   .mgmt-filters { max-width:1100px; margin:0 auto 20px; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   .mgmt-filter { background:var(--white); border:1px solid var(--border); padding:6px 14px; border-radius:8px; cursor:pointer; font-size:12px; font-family:inherit; color:var(--text-secondary); transition:all .2s; }
   .mgmt-filter:hover { border-color:var(--teal); }
@@ -112,6 +128,7 @@
   <button id="btn-quality">💰 利润质量</button>
   <button id="btn-cashflow">🌊 现金流</button>
   <button id="btn-cfquality">💧 现金流质量</button>
+  <button id="btn-laotang">🎯 老唐估值</button>
   <button id="btn-quarterly">📅 季度追踪</button>
   <button id="btn-detail">📋 数据明细</button>
   <button id="btn-mgmt">💬 管理层观点</button>
@@ -460,6 +477,59 @@
       · <b>两处公司重新列报</b>：2007 年 OCF 原报 15.4 亿、2008 年报重列为 18.4 亿；2018 年原报 1,064 亿、2019 年报重新列报为 1,109 亿。本表采用各年年报<b>当年原始披露值</b>。<br>
       · 数据来源：2004—2025 各年度年报现金流量表与综合财务状况表原文提取，逐年勾稽校验（21 组对照中 19 组完全一致，2 组差异即上述公司重列）。
     </div>
+  </div>
+</div>
+
+<div class="section" id="sec-laotang">
+  <div class="summary-box"><h3>📌 老唐估值法 · 净利×PE ＋ SOTP 分部加总</h3><p>老唐（唐朝）估值法的逻辑：先验证三大前提（利润是真的吗 / 能持续吗 / 维持盈利要不要大量资本），再预测三年后净利，套 <span class="hl">合理估值 = 第三年净利 × 合理PE</span>，<span class="hl">五折为理想买点</span>，<span class="hl">卖点 = min(净利×50, 合理估值×1.5)</span>。腾讯属「主业＋巨额投资组合」结构，故另用 SOTP 分部加总交叉验证——主业净利先剔除应占联营利润，投资组合再单独计价，避免双重计算。<br><br><b>合理PE 取 20× 而非老唐常用的 25×</b>，理由：① 中国互联网平台监管风险是<b>已实际兑现过</b>的（2021 反垄断罚款、游戏版号冻结、金融科技整顿），应体现在折价而非仅体现在利润预测；② AI 资本开支回报<b>尚未验证</b>（2025 Capex 1,129 亿），25× 相当于提前给这笔投入定价成功；③ 利润增速已从 15%+ 降至低双位数。25× 更适合近乎无政策风险的生意。</p></div>
+
+  <div class="lt-verdict" id="lt-verdict">
+    <div><div class="lt-vm"><span class="k">当前定位（简化法·中性）</span></div><div class="tag" id="lt-tag">—</div></div>
+    <div class="metrics">
+      <div class="lt-vm"><span class="k">现价</span><span class="v" id="lt-price">—</span></div>
+      <div class="lt-vm"><span class="k">动态PE(Non-GAAP)</span><span class="v" id="lt-pe">—</span></div>
+      <div class="lt-vm"><span class="k">对中性合理值</span><span class="v" id="lt-disc">—</span></div>
+      <div class="lt-vm"><span class="k">中性理想买点</span><span class="v" id="lt-buy">—</span></div>
+    </div>
+  </div>
+
+  <div class="chart-block">
+    <h3>关键假设（改动任一数字，下方全部结果实时重算）</h3>
+    <div class="lt-assume">
+      <div class="lt-field"><label>基准年 Non-GAAP 归母净利 <span class="u">亿元</span></label><input type="number" step="1" id="lt-baseNP" value="2596"></div>
+      <div class="lt-field"><label>总股本 <span class="u">亿股</span></label><input type="number" step="0.1" id="lt-shares" value="90.1"></div>
+      <div class="lt-field"><label>汇率 1港元= <span class="u">人民币</span></label><input type="number" step="0.01" id="lt-fx" value="0.91"></div>
+      <div class="lt-field"><label>合理市盈率 <span class="u">倍（保守取20×）</span></label><input type="number" step="0.5" id="lt-pe-in" value="20"></div>
+      <div class="lt-field"><label>现价 <span class="u">港元</span></label><input type="number" step="0.1" id="lt-price-in" value="460.2"></div>
+      <div class="lt-field"><label>预测年数 <span class="u">年</span></label><input type="number" step="1" id="lt-years" value="3"></div>
+    </div>
+  </div>
+
+  <div class="chart-block">
+    <h3>① 简化法：三情景估值（净利 × PE）</h3>
+    <div class="table-scroll"><table class="data-table"><thead><tr><th>情景</th><th>三年CAGR</th><th>第三年净利(亿)</th><th>合理估值(亿RMB)</th><th>合理/股(HK$)</th><th>理想买点(HK$)</th><th>卖点(HK$)</th></tr></thead><tbody id="lt-scn"></tbody></table></div>
+  </div>
+
+  <div class="chart-row single full"><div class="chart-block"><h3>估值区间 vs 现价（HK$）——柱为买点/合理值/卖点，横线为现价</h3><canvas id="chart_lt_range"></canvas></div></div>
+
+  <div class="chart-block">
+    <h3>② SOTP 分部加总（主业 ＋ 投资组合 ＋ 净现金）</h3>
+    <div class="lt-assume" style="margin-bottom:16px">
+      <div class="lt-field"><label>应占联营利润 <span class="u">亿·从净利剔除</span></label><input type="number" step="10" id="lt-assoc" value="250"></div>
+      <div class="lt-field"><label>核心主业三年CAGR <span class="u">%</span></label><input type="number" step="0.5" id="lt-coreCagr" value="12"></div>
+      <div class="lt-field"><label>上市投资公允价值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-listed" value="6727"></div>
+      <div class="lt-field"><label>非上市投资账面值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-unlisted" value="3631"></div>
+      <div class="lt-field"><label>投资组合折扣 <span class="u">%</span></label><input type="number" step="5" id="lt-portDisc" value="100"></div>
+      <div class="lt-field"><label>净现金 <span class="u">亿元</span></label><input type="number" step="10" id="lt-netCash" value="1071"></div>
+    </div>
+    <div class="table-scroll"><table class="data-table"><thead><tr><th>分部</th><th>金额(亿RMB)</th></tr></thead><tbody id="lt-sotp"></tbody></table></div>
+    <div class="lt-note"><b>口径：</b>联营公司（拼多多、快手、富途等）的价值已计入「上市投资公允价值」，故主业净利须先<b>剔除应占联营利润</b>，二者不重复计价。投资组合按当前值计入、假设三年不增长，属保守处理（安全垫）。</div>
+  </div>
+
+  <div class="chart-block">
+    <h3>③ 合理PE 敏感性——这张表比任何单一结论都重要</h3>
+    <div class="table-scroll"><table class="data-table"><thead><tr><th>合理PE</th><th>中性合理/股(HK$)</th><th>中性买点/股(HK$)</th><th>现价相对买点</th><th>信号</th></tr></thead><tbody id="lt-sens"></tbody></table></div>
+    <div class="lt-note"><b>同一家公司、同样的利润预测，仅仅改变「愿意付多少倍市盈率」这一个主观判断，买卖信号就能从「深度低估」翻转到「明显偏贵」。</b>这正是老唐反复强调「低利率不等于该给高 PE、务必封顶保守」的原因，也是这类估值只能给区间和逻辑、给不了精确答案的根本原因。<br><br>⚠️ <b>本 Tab 所有数字均为基于主观假设的推演，不构成投资建议。</b>估值的输入（尤其合理PE、三年增速）是判断而非事实，请用自己的认知验证后再做决策。</div>
   </div>
 </div>
 
@@ -1263,12 +1333,12 @@ function showTab(id) {
   document.getElementById('sec-' + id).classList.add('active');
   document.getElementById('btn-' + id).classList.add('active');
   if (!cr[id]) { cr[id] = true;
-    var f = { overview: initOverview, core: initCore, revenue: initRevenue, returns: initReturns, growth: initGrowth, quality: initQuality, cashflow: initCashflow, cfquality: initCfQuality, quarterly: initQuarterly, mgmt: initMgmtTimeline };
+    var f = { overview: initOverview, core: initCore, revenue: initRevenue, returns: initReturns, growth: initGrowth, quality: initQuality, cashflow: initCashflow, cfquality: initCfQuality, laotang: initLaotang, quarterly: initQuarterly, mgmt: initMgmtTimeline };
     if (f[id]) f[id]();
   }
 }
 
-['overview','core','revenue','returns','growth','quality','cashflow','cfquality','quarterly','detail','mgmt'].forEach(function(id) {
+['overview','core','revenue','returns','growth','quality','cashflow','cfquality','laotang','quarterly','detail','mgmt'].forEach(function(id) {
   document.getElementById('btn-' + id).addEventListener('click', function() { showTab(id); });
 });
 
@@ -1448,6 +1518,113 @@ function initCfQuality() {
     ] },
     options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { title: { display: true, text: '亿元' } } } }
   });
+}
+
+var ltChart = null;
+function ltNum(id) { var v = parseFloat(document.getElementById(id).value); return isFinite(v) ? v : 0; }
+function ltFmt(n, d) { return (n === null || !isFinite(n)) ? '—' : n.toLocaleString('en-US', {minimumFractionDigits: d||0, maximumFractionDigits: d||0}); }
+
+function ltCalc() {
+  var baseNP = ltNum('lt-baseNP'), shares = ltNum('lt-shares'), fx = ltNum('lt-fx');
+  var pe = ltNum('lt-pe-in'), price = ltNum('lt-price-in'), years = ltNum('lt-years');
+  function mk(cagr) {
+    var np3 = baseNP * Math.pow(1 + cagr/100, years);
+    var fairR = np3 * pe, fairS = fairR / shares, fairH = fairS / fx;
+    return { cagr: cagr, np3: np3, fairR: fairR, fairH: fairH, buyH: fairH*0.5,
+             sellH: Math.min(np3*50, fairR*1.5)/shares/fx };
+  }
+  return { opt: mk(15), neu: mk(12), pes: mk(8), price: price, shares: shares, fx: fx, baseNP: baseNP, pe: pe, years: years };
+}
+
+function ltPosition(price, neu, pes) {
+  if (price <= pes.buyH) return { label: '深度低估', color: 'var(--green)' };
+  if (price <= neu.buyH) return { label: '低估', color: 'var(--green)' };
+  if (price < neu.fairH) return { label: '合理偏低', color: 'var(--teal)' };
+  if (price < neu.sellH) return { label: '合理/偏高', color: '#B5810B' };
+  return { label: '卖出区', color: 'var(--red)' };
+}
+
+function ltRender() {
+  var s = ltCalc();
+  var rows = [['乐观', s.opt], ['中性', s.neu], ['悲观', s.pes]];
+  document.getElementById('lt-scn').innerHTML = rows.map(function(r) {
+    var d = r[1], hi = (r[0] === '中性') ? ' style="background:#EAF4F3"' : '';
+    return '<tr' + hi + '><td><strong>' + r[0] + '</strong></td><td>' + d.cagr + '%</td><td>' + ltFmt(d.np3) +
+      '</td><td>' + ltFmt(d.fairR) + '</td><td><strong>' + ltFmt(d.fairH,1) + '</strong></td><td style="color:var(--green);font-weight:600">' +
+      ltFmt(d.buyH,1) + '</td><td style="color:var(--red)">' + ltFmt(d.sellH,1) + '</td></tr>';
+  }).join('');
+
+  var pos = ltPosition(s.price, s.neu, s.pes);
+  var disc = s.price / s.neu.fairH - 1, vsBuy = s.price / s.neu.buyH - 1;
+  document.getElementById('lt-verdict').style.borderLeftColor = pos.color;
+  var tg = document.getElementById('lt-tag'); tg.textContent = pos.label; tg.style.color = pos.color;
+  document.getElementById('lt-price').textContent = 'HK$' + ltFmt(s.price,1);
+  document.getElementById('lt-pe').textContent = ltFmt(s.price*s.shares*s.fx/s.baseNP, 1) + 'x';
+  var de = document.getElementById('lt-disc');
+  de.textContent = (disc*100).toFixed(1) + '%'; de.style.color = disc < 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('lt-buy').textContent = 'HK$' + ltFmt(s.neu.buyH,1) +
+    '（现价' + (vsBuy<0?'低':'高') + Math.abs(vsBuy*100).toFixed(1) + '%）';
+
+  // SOTP
+  var assoc = ltNum('lt-assoc'), coreCagr = ltNum('lt-coreCagr'), listed = ltNum('lt-listed');
+  var unlisted = ltNum('lt-unlisted'), portDisc = ltNum('lt-portDisc'), netCash = ltNum('lt-netCash');
+  var coreNP = s.baseNP - assoc;
+  var core3 = coreNP * Math.pow(1 + coreCagr/100, s.years);
+  var coreVal = core3 * s.pe, portVal = (listed + unlisted) * portDisc/100;
+  var totR = coreVal + portVal + netCash;
+  var sFairH = totR / s.shares / s.fx, sBuyH = sFairH * 0.5;
+  var sDisc = s.price / sFairH - 1;
+  var sPosLabel = s.price <= sBuyH ? '低于买点·低估' : (s.price < sFairH ? '买点与合理值之间' : (s.price < sFairH*1.5 ? '合理/偏高' : '卖出区'));
+  var sPosColor = s.price <= sBuyH ? 'var(--green)' : (s.price < sFairH ? 'var(--teal)' : 'var(--red)');
+  document.getElementById('lt-sotp').innerHTML =
+    [['核心主业净利（基准年 Non-GAAP 归母 − 应占联营）', coreNP],
+     ['→ 第三年核心净利（CAGR ' + coreCagr + '%）', core3],
+     ['① 主业估值 ＝ 第三年核心净利 × ' + s.pe + '×', coreVal],
+     ['② 投资组合 ＝（上市 ' + ltFmt(listed) + ' ＋ 非上市 ' + ltFmt(unlisted) + '）× ' + portDisc + '%', portVal],
+     ['③ 净现金', netCash]].map(function(r) {
+      return '<tr><td>' + r[0] + '</td><td>' + ltFmt(r[1]) + '</td></tr>';
+    }).join('') +
+    '<tr style="background:#EAF4F3"><td><strong>合理总市值（人民币）</strong></td><td><strong>' + ltFmt(totR) + '</strong></td></tr>' +
+    '<tr><td><strong>合理估值 / 股</strong></td><td><strong>HK$' + ltFmt(sFairH,1) + '</strong></td></tr>' +
+    '<tr><td><strong>理想买点 / 股（五折）</strong></td><td style="color:var(--green)"><strong>HK$' + ltFmt(sBuyH,1) + '</strong></td></tr>' +
+    '<tr><td>现价对合理值</td><td style="color:' + (sDisc<0?'var(--green)':'var(--red)') + '">' + (sDisc*100).toFixed(1) + '%</td></tr>' +
+    '<tr><td><strong>SOTP 定位</strong></td><td style="color:' + sPosColor + ';font-weight:700">' + sPosLabel + '</td></tr>';
+
+  // 敏感性
+  document.getElementById('lt-sens').innerHTML = [25, 20, 15].map(function(p) {
+    var np3 = s.baseNP * Math.pow(1.12, s.years);
+    var fH = np3 * p / s.shares / s.fx, bH = fH * 0.5, rel = s.price/bH - 1;
+    var sig = rel <= -0.15 ? '深度低估' : (rel <= 0 ? '低于买点' : (rel < 0.2 ? '已过买点·边际薄' : '明显偏贵'));
+    var cur = (Math.abs(p - s.pe) < 0.01) ? ' style="background:#FFF3CD;font-weight:600"' : '';
+    return '<tr' + cur + '><td>' + p + '×' + (Math.abs(p-s.pe)<0.01 ? '（当前）' : '') + '</td><td>' + ltFmt(fH,1) +
+      '</td><td>' + ltFmt(bH,1) + '</td><td style="color:' + (rel<0?'var(--green)':'var(--red)') + '">' +
+      (rel>=0?'+':'') + (rel*100).toFixed(1) + '%</td><td>' + sig + '</td></tr>';
+  }).join('');
+
+  // 估值区间图
+  var data = {
+    labels: ['乐观 (15%)', '中性 (12%)', '悲观 (8%)'],
+    datasets: [
+      { label: '理想买点(五折)', data: [s.opt.buyH, s.neu.buyH, s.pes.buyH], backgroundColor: C[5]+'CC' },
+      { label: '合理估值', data: [s.opt.fairH, s.neu.fairH, s.pes.fairH], backgroundColor: C[0]+'CC' },
+      { label: '卖点', data: [s.opt.sellH, s.neu.sellH, s.pes.sellH], backgroundColor: C[1]+'99' },
+      { label: '现价 HK$' + ltFmt(s.price,1), data: [s.price, s.price, s.price], type: 'line',
+        borderColor: C[2], borderWidth: 2, borderDash: [6,4], pointRadius: 0, fill: false }
+    ]
+  };
+  if (ltChart) { ltChart.data = data; ltChart.update(); }
+  else {
+    ltChart = new Chart(document.getElementById('chart_lt_range'), { type: 'bar', data: data,
+      options: { responsive: true, plugins: { legend: { position: 'top' } },
+        scales: { y: { title: { display: true, text: '港元 / 股' } } } } });
+  }
+}
+
+function initLaotang() {
+  ['lt-baseNP','lt-shares','lt-fx','lt-pe-in','lt-price-in','lt-years',
+   'lt-assoc','lt-coreCagr','lt-listed','lt-unlisted','lt-portDisc','lt-netCash']
+    .forEach(function(id) { document.getElementById(id).addEventListener('input', ltRender); });
+  ltRender();
 }
 
 function initQuarterly() {
