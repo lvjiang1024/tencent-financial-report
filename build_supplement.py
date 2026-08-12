@@ -57,6 +57,10 @@ DPS_HISTORY = {
     2024: 4.50, 2025: 5.30,
 }
 
+# 2026H1 分部收入（来自 2026Q2 公告简明综合收益表「六个月」列，四项合计 401,243
+# 与公告总收入完全吻合）。半年度数据，非全年，单独存放供季度跟踪使用。
+SEGMENTS_2026H1 = {'vas': 194524, 'ads': 81736, 'fintech': 120171, 'others': 4812}
+
 SEG_FILES = {
     2019: '2019/腾讯二零一九年第四季度及全年业绩.pdf',
     2020: '2020/腾讯二零二零年第四季及全年业绩.pdf',
@@ -124,6 +128,13 @@ def extract_segments():
 # ============================================================
 # FCF / Capex
 # ============================================================
+# 注意负值措辞：2026Q2 首次出现「錄得負自由現金流人民幣138億元」，
+# 负号在「自由現金流」之前而非数字前，必须单独匹配并取负，否则会漏提或误记为正。
+FCF_NEG_PATTERNS = [
+    r'錄得負自由現金流人民幣([\d,.]+)億元',
+    r'录得负自由现金流人民币([\d,.]+)亿元',
+    r'negative free cash flow of RMB([\d,.]+) billion',
+]
 FCF_PATTERNS = [
     r'自由现金流[*]?为人民币([\d,.]+)亿元',
     r'自由現金流為人民幣([\d,.]+)億元',
@@ -183,12 +194,20 @@ def extract_fcf_capex():
                 print('ERR', fp, e); continue
 
             rec = {}
-            for pat in FCF_PATTERNS:
+            # 负值措辞优先匹配，否则「負自由現金流…138億元」会被下面的正值模式漏掉
+            for pat in FCF_NEG_PATTERNS:
                 mm = re.search(pat, text)
                 if mm:
                     v = float(mm.group(1).replace(',', ''))
-                    rec['fcf'] = round(v * (1000 if 'billion' in pat else 100))
+                    rec['fcf'] = -round(v * (1000 if 'billion' in pat else 100))
                     break
+            if 'fcf' not in rec:
+                for pat in FCF_PATTERNS:
+                    mm = re.search(pat, text)
+                    if mm:
+                        v = float(mm.group(1).replace(',', ''))
+                        rec['fcf'] = round(v * (1000 if 'billion' in pat else 100))
+                        break
             got_table = False
             for pat in CAPEX_TABLE:
                 mm = re.search(pat, text)
@@ -224,6 +243,7 @@ def main():
     segments_all.update({str(k): v for k, v in segs.items()})
 
     data = {
+        'segments_2026h1': SEGMENTS_2026H1,
         'segments': segments_all,
         'fcf_capex_quarterly': fc,
         'nifrs_op': {str(k): v for k, v in NIFRS_OP.items()},

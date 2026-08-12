@@ -175,8 +175,14 @@ def _reconcile_year(y):
     if q1_rev is not None:
         out['Q1'] = dict(revenue=q1_rev, attr_profit=q1_attr)
 
+    # Q2 有两种来源：① 独立的第二季业绩公告（2024/2025/2026 起采用，直接是单季数）；
+    # ② 中期报告（H1 累计，需减去 Q1）。优先用①，缺失时才回退②。
+    q2_rec = periods_by_key.get((y, 'Q2'))
     q2_rev = q2_attr = None
-    if h1 and h1.get('revenue') is not None:
+    if q2_rec and q2_rec.get('revenue') is not None:
+        q2_rev = q2_rec['revenue']
+        q2_attr = q2_rec.get('attr_profit')
+    elif h1 and h1.get('revenue') is not None:
         if q1_rev is not None and h1['revenue'] >= q1_rev:
             q2_rev = h1['revenue'] - q1_rev
             if q1_attr is not None and h1.get('attr_profit') is not None:
@@ -459,7 +465,7 @@ html = f'''<!DOCTYPE html>
 <body>
 <header class="hero">
   <h1>腾讯控股 财务分析报告</h1>
-  <div class="sub">2004—2025 跨越 22 年上市历程 ｜ 官方年报 / 中期 / 季度业绩公告 ｜ 生成日期：2026-07-10</div>
+  <div class="sub">2004—2025 年度数据 ＋ 2026H1 季度跟踪 ｜ 官方年报 / 中期 / 季度业绩公告 ｜ 数据截至 2026 年中报 ｜ 生成日期：2026-08-12</div>
 </header>
 
 <div class="kpi-row">
@@ -528,7 +534,7 @@ html = f'''<!DOCTYPE html>
 </div>
 
 <div class="section" id="sec-cashflow">
-  <div class="summary-box"><h3>📌 现金流与资本开支</h3><p>自由现金流（FCF）为公司自行披露口径：经营活动现金流减去资本开支、媒体内容开支及租赁负债付款。年度 FCF 为四个季度加总（估算）。<span class="hl">2024 年起资本开支跳升至 768 亿元、2025 年达 792 亿元</span>，主要投向 AI 算力与数据中心基础设施——这是当前腾讯财务叙事的核心变量：Capex 高企但核心业务现金创造能力仍在增强。</p></div>
+  <div class="summary-box"><h3>📌 现金流与资本开支</h3><p>自由现金流（FCF）为公司自行披露口径：经营活动现金流减去资本开支、媒体内容开支及租赁负债付款。年度 FCF 为四个季度加总（估算）。<span class="hl">2024 年起资本开支跳升至 768 亿元、2025 年达 792 亿元</span>，主要投向 AI 算力与数据中心基础设施。<br><br><b>⚠️ 2026Q2 出现转折：自由现金流首次转负 −138 亿元。</b>当季经营现金流 527 亿，被资本开支付款 593 亿、媒体内容 50 亿、租赁负债 22 亿超额抵销；单季资本开支 528 亿（GAAP 口径），是 2025Q4 的 2.7 倍。公司说明其中含<b>大额 AI 算力预付款</b>，并披露<b>剔除算力采购预付款后 FCF 为正 376 亿</b>。同期净现金从 1,469 亿降至 582 亿（另因支付 2025 年度股息 416 亿）。这是 AI 投入从「利润表压力」转为「现金流压力」的第一个明确信号，需持续跟踪。</p></div>
   <div class="chart-row single full"><div class="chart-block"><h3>季度自由现金流 & 资本开支（2019Q1—2026Q1，亿元）</h3><canvas id="chart_fc_q"></canvas></div></div>
   <div class="chart-row"><div class="chart-block"><h3>年度自由现金流 vs 归母净利润（亿元，FCF为四季加总估算）</h3><canvas id="chart_fcf_np"></canvas></div><div class="chart-block"><h3>年度资本开支（亿元，官方全年披露值）</h3><canvas id="chart_capex_fy"></canvas></div></div>
 </div>
@@ -553,7 +559,7 @@ html = f'''<!DOCTYPE html>
 </div>
 
 <div class="section" id="sec-laotang">
-  <div class="summary-box"><h3>📌 老唐估值法 · 净利×PE ＋ SOTP 分部加总</h3><p>老唐（唐朝）估值法的逻辑：先验证三大前提（利润是真的吗 / 能持续吗 / 维持盈利要不要大量资本），再预测三年后净利，套 <span class="hl">合理估值 = 第三年净利 × 合理PE</span>，<span class="hl">五折为理想买点</span>，<span class="hl">卖点 = min(净利×50, 合理估值×1.5)</span>。腾讯属「主业＋巨额投资组合」结构，故另用 SOTP 分部加总交叉验证——主业净利先剔除应占联营利润，投资组合再单独计价，避免双重计算。<br><br><b>合理PE 取 20× 而非老唐常用的 25×</b>，理由：① 中国互联网平台监管风险是<b>已实际兑现过</b>的（2021 反垄断罚款、游戏版号冻结、金融科技整顿），应体现在折价而非仅体现在利润预测；② AI 资本开支回报<b>尚未验证</b>（2025 Capex 1,129 亿），25× 相当于提前给这笔投入定价成功；③ 利润增速已从 15%+ 降至低双位数。25× 更适合近乎无政策风险的生意。</p></div>
+  <div class="summary-box"><h3>📌 老唐估值法 · 净利×PE ＋ SOTP 分部加总</h3><p>老唐（唐朝）估值法的逻辑：先验证三大前提（利润是真的吗 / 能持续吗 / 维持盈利要不要大量资本），再预测三年后净利，套 <span class="hl">合理估值 = 第三年净利 × 合理PE</span>，<span class="hl">五折为理想买点</span>，<span class="hl">卖点 = min(净利×50, 合理估值×1.5)</span>。腾讯属「主业＋巨额投资组合」结构，故另用 SOTP 分部加总交叉验证——主业净利先剔除应占联营利润，投资组合再单独计价，避免双重计算。<br><br><b>📅 数据基准已更新至 2026 年中报（2026-08-12 披露）</b>：基准净利改用 <b>TTM Non-GAAP 归母 2,715.65 亿</b>（＝2025 全年 2,596 − 2025H1 1,243.81 ＋ 2026H1 1,363.20）；投资组合与净现金按 2026-06-30 最新披露更新——<b>上市投资公允价值由 6,727 亿降至 4,872 亿（−27.6%）、净现金由 1,071 亿降至 582 亿</b>，非上市投资由 3,631 亿升至 3,879 亿。两个方向部分对冲：利润增长推高估值，投资组合缩水与净现金消耗拉低估值。<br><br><b>合理PE 取 20× 而非老唐常用的 25×</b>，理由：① 中国互联网平台监管风险是<b>已实际兑现过</b>的（2021 反垄断罚款、游戏版号冻结、金融科技整顿），应体现在折价而非仅体现在利润预测；② AI 资本开支回报<b>尚未验证</b>（2025 Capex 1,129 亿），25× 相当于提前给这笔投入定价成功；③ 利润增速已从 15%+ 降至低双位数。25× 更适合近乎无政策风险的生意。</p></div>
 
   <div class="lt-verdict" id="lt-verdict">
     <div><div class="lt-vm"><span class="k">当前定位（简化法·中性）</span></div><div class="tag" id="lt-tag">—</div></div>
@@ -568,11 +574,11 @@ html = f'''<!DOCTYPE html>
   <div class="chart-block">
     <h3>关键假设（改动任一数字，下方全部结果实时重算）</h3>
     <div class="lt-assume">
-      <div class="lt-field"><label>基准年 Non-GAAP 归母净利 <span class="u">亿元</span></label><input type="number" step="1" id="lt-baseNP" value="2596"></div>
+      <div class="lt-field"><label>基准 Non-GAAP 归母净利 <span class="u">亿元·TTM</span></label><input type="number" step="1" id="lt-baseNP" value="2715.65"></div>
       <div class="lt-field"><label>总股本 <span class="u">亿股</span></label><input type="number" step="0.1" id="lt-shares" value="90.1"></div>
       <div class="lt-field"><label>汇率 1港元= <span class="u">人民币</span></label><input type="number" step="0.01" id="lt-fx" value="0.91"></div>
       <div class="lt-field"><label>合理市盈率 <span class="u">倍（保守取20×）</span></label><input type="number" step="0.5" id="lt-pe-in" value="20"></div>
-      <div class="lt-field"><label>现价 <span class="u">港元</span></label><input type="number" step="0.1" id="lt-price-in" value="460.2"></div>
+      <div class="lt-field"><label>现价 <span class="u">港元</span></label><input type="number" step="0.1" id="lt-price-in" value="461.6"></div>
       <div class="lt-field"><label>预测年数 <span class="u">年</span></label><input type="number" step="1" id="lt-years" value="3"></div>
     </div>
   </div>
@@ -589,10 +595,10 @@ html = f'''<!DOCTYPE html>
     <div class="lt-assume" style="margin-bottom:16px">
       <div class="lt-field"><label>应占联营利润 <span class="u">亿·从净利剔除</span></label><input type="number" step="10" id="lt-assoc" value="250"></div>
       <div class="lt-field"><label>核心主业三年CAGR <span class="u">%</span></label><input type="number" step="0.5" id="lt-coreCagr" value="12"></div>
-      <div class="lt-field"><label>上市投资公允价值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-listed" value="6727"></div>
-      <div class="lt-field"><label>非上市投资账面值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-unlisted" value="3631"></div>
+      <div class="lt-field"><label>上市投资公允价值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-listed" value="4872"></div>
+      <div class="lt-field"><label>非上市投资账面值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-unlisted" value="3879"></div>
       <div class="lt-field"><label>投资组合折扣 <span class="u">%</span></label><input type="number" step="5" id="lt-portDisc" value="100"></div>
-      <div class="lt-field"><label>净现金 <span class="u">亿元</span></label><input type="number" step="10" id="lt-netCash" value="1071"></div>
+      <div class="lt-field"><label>净现金 <span class="u">亿元</span></label><input type="number" step="10" id="lt-netCash" value="582"></div>
     </div>
     <div class="table-scroll"><table class="data-table"><thead><tr><th>分部</th><th>金额(亿RMB)</th></tr></thead><tbody id="lt-sotp"></tbody></table></div>
     <div class="lt-note"><b>口径：</b>联营公司（拼多多、快手、富途等）的价值已计入「上市投资公允价值」，故主业净利须先<b>剔除应占联营利润</b>，二者不重复计价。投资组合按当前值计入、假设三年不增长，属保守处理（安全垫）。</div>

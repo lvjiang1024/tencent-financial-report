@@ -648,6 +648,65 @@
       "nifrs_net": 57313.0
     },
     {
+      "year": 2024,
+      "period_type": "Q3",
+      "source_file": "腾讯二零二四年第三季业绩.pdf",
+      "revenue": 167193.0,
+      "gross": 88828.0,
+      "op_profit": 53333.0,
+      "net_profit": 53983.0,
+      "attr_profit": 53230.0,
+      "eps_basic": 5.762
+    },
+    {
+      "year": 2024,
+      "period_type": "Q4",
+      "source_file": "腾讯二零二四年第四季业绩.pdf",
+      "nifrs_op": 59475.0,
+      "revenue": 172446.0,
+      "gross": 90653.0,
+      "op_profit": 51478.0,
+      "net_profit": 51467.0,
+      "attr_profit": 51324.0,
+      "eps_basic": 5.597,
+      "eps_diluted": 5.485
+    },
+    {
+      "year": 2025,
+      "period_type": "Q1",
+      "source_file": "2025 Q1.pdf",
+      "revenue": 180022.0,
+      "gross": 100493.0,
+      "op_profit": 57566.0,
+      "net_profit": 49725.0,
+      "attr_profit": 47821.0,
+      "eps_basic": 5.252,
+      "eps_diluted": 5.129
+    },
+    {
+      "year": 2025,
+      "period_type": "Q2",
+      "source_file": "2025 Q2.pdf",
+      "revenue": 184504.0,
+      "gross": 105013.0,
+      "op_profit": 60104.0,
+      "net_profit": 56044.0,
+      "attr_profit": 55628.0,
+      "eps_basic": 6.115,
+      "eps_diluted": 5.996
+    },
+    {
+      "year": 2025,
+      "period_type": "Q3",
+      "source_file": "2025 Q3.pdf",
+      "revenue": 192869.0,
+      "gross": 108798.0,
+      "op_profit": 63554.0,
+      "net_profit": 64943.0,
+      "attr_profit": 63133.0,
+      "eps_basic": 6.952
+    },
+    {
       "year": 2025,
       "period_type": "Q4",
       "source_file": "2025 Q4.pdf",
@@ -670,6 +729,18 @@
       "eps_basic": 6.431,
       "eps_diluted": 6.302,
       "nifrs_net": 67905.0
+    },
+    {
+      "year": 2026,
+      "period_type": "Q2",
+      "source_file": "2026 Q2.pdf",
+      "revenue": 204785.0,
+      "gross": 118433.0,
+      "net_profit": 57977.0,
+      "attr_profit": 56022.0,
+      "eps_basic": 6.207,
+      "eps_diluted": 6.104,
+      "nifrs_net": 68415.0
     }
   ]
 }

@@ -163,6 +163,21 @@ def _table_extract(text, period_label_year, period_label_full):
     NIFRS = r'非[国國][际際][财財][务務][报報][告吿][准準][则則]'
     r['nifrs_op']   = grab(NIFRS + r'[经經]营[盈盈]利\s+([\d,]+)')
     r['nifrs_net']  = grab(NIFRS + r'本公司[权權]益持有人[应應][占佔][盈盈]利\s+([\d,]+)')
+
+    # 英文版公告（2024Q3、2025Q1-Q3 等）用 FINANCIAL PERFORMANCE HIGHLIGHTS 表，
+    # 中文关键词全部落空，需补一套英文模式。注意 Non-IFRS 行须先匹配，
+    # 否则 "Operating profit" 会被 "Non-IFRS operating profit" 行抢先命中。
+    if len([v for v in r.values() if v is not None]) < 3:
+        r = {}
+        r['nifrs_op']  = grab(r'Non-IFRS operating profit\s+([\d,]+)')
+        r['nifrs_net'] = grab(r'Non-IFRS profit attributable to equity\s*holders of the Company\s+([\d,]+)')
+        r['revenue']   = grab(r'(?<!Total )Revenues\s+([\d,]+)')
+        r['gross']     = grab(r'Gross profit\s+([\d,]+)')
+        r['op_profit'] = grab(r'(?<!Non-IFRS )Operating profit\s+([\d,]+)')
+        r['net_profit']= grab(r'Profit for the (?:period|year)\s+([\d,]+)')
+        r['attr_profit'] = grab(r'(?<!Non-IFRS )Profit attributable to equity\s*holders of the Company\s+([\d,]+)')
+        r['eps_basic'] = grab(r'[–-]\s*basic\s+([\d.]+)')
+        r['eps_diluted'] = grab(r'[–-]\s*diluted\s+([\d.]+)')
     return {k: v for k, v in r.items() if v is not None}
 
 
