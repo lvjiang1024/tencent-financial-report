@@ -465,7 +465,7 @@ html = f'''<!DOCTYPE html>
 <body>
 <header class="hero">
   <h1>腾讯控股 财务分析报告</h1>
-  <div class="sub">2004—2025 年度数据 ＋ 2026H1 季度跟踪 ｜ 官方年报 / 中期 / 季度业绩公告 ｜ 数据截至 2026 年中报 ｜ 生成日期：2026-08-12</div>
+  <div class="sub">2004—2025 年度数据 ＋ 2026 前三季跟踪 ｜ 官方年报 / 中期 / 季度业绩公告 ｜ 数据截至 2026 年三季报 ｜ 生成日期：2026-11-18</div>
 </header>
 
 <div class="kpi-row">
@@ -534,7 +534,7 @@ html = f'''<!DOCTYPE html>
 </div>
 
 <div class="section" id="sec-cashflow">
-  <div class="summary-box"><h3>📌 现金流与资本开支</h3><p>自由现金流（FCF）为公司自行披露口径：经营活动现金流减去资本开支、媒体内容开支及租赁负债付款。年度 FCF 为四个季度加总（估算）。<span class="hl">2024 年起资本开支跳升至 768 亿元、2025 年达 792 亿元</span>，主要投向 AI 算力与数据中心基础设施。<br><br><b>⚠️ 2026Q2 出现转折：自由现金流首次转负 −138 亿元。</b>当季经营现金流 527 亿，被资本开支付款 593 亿、媒体内容 50 亿、租赁负债 22 亿超额抵销；单季资本开支 528 亿（GAAP 口径），是 2025Q4 的 2.7 倍。公司说明其中含<b>大额 AI 算力预付款</b>，并披露<b>剔除算力采购预付款后 FCF 为正 376 亿</b>。同期净现金从 1,469 亿降至 582 亿（另因支付 2025 年度股息 416 亿）。这是 AI 投入从「利润表压力」转为「现金流压力」的第一个明确信号，需持续跟踪。</p></div>
+  <div class="summary-box"><h3>📌 现金流与资本开支</h3><p>自由现金流（FCF）为公司自行披露口径：经营活动现金流减去资本开支、媒体内容开支及租赁负债付款。年度 FCF 为四个季度加总（估算）。<span class="hl">2024 年起资本开支跳升至 768 亿元、2025 年达 792 亿元</span>，主要投向 AI 算力与数据中心基础设施。<br><br><b>⚠️ 2026Q2 出现转折：自由现金流首次转负 −138 亿元。</b>当季经营现金流 527 亿，被资本开支付款 593 亿、媒体内容 50 亿、租赁负债 22 亿超额抵销；单季资本开支 528 亿（GAAP 口径），是 2025Q4 的 2.7 倍。公司说明其中含<b>大额 AI 算力预付款</b>，并披露<b>剔除算力采购预付款后 FCF 为正 376 亿</b>。同期净现金从 1,469 亿降至 582 亿（另因支付 2025 年度股息 416 亿）。这是 AI 投入从「利润表压力」转为「现金流压力」的第一个明确信号，需持续跟踪。<br><br><b>🔴 2026Q3 进一步恶化：FCF −691 亿</b>（经营现金流仅 26 亿，被资本开支付款 651 亿＋媒体内容 46 亿＋租赁 20 亿超额抵销），单季资本开支 814 亿（GAAP）、前三季累计 1,662 亿，已超过 2025 全年的两倍。公司口径：剔除算力预付款后 FCF 为正 169 亿——但这一"剔除后"数字也已从 Q2 的 376 亿<b>腰斩</b>。9 月末首次出现<b>净债务 137 亿</b>（借款季内 +812 亿）。连续两个季度 FCF 为负、且开始依赖借款支撑资本开支，Q4 将是判断这是一次性预付高峰还是常态化的关键一季。</p></div>
   <div class="chart-row single full"><div class="chart-block"><h3>季度自由现金流 & 资本开支（2019Q1—2026Q1，亿元）</h3><canvas id="chart_fc_q"></canvas></div></div>
   <div class="chart-row"><div class="chart-block"><h3>年度自由现金流 vs 归母净利润（亿元，FCF为四季加总估算）</h3><canvas id="chart_fcf_np"></canvas></div><div class="chart-block"><h3>年度资本开支（亿元，官方全年披露值）</h3><canvas id="chart_capex_fy"></canvas></div></div>
 </div>
@@ -559,7 +559,7 @@ html = f'''<!DOCTYPE html>
 </div>
 
 <div class="section" id="sec-laotang">
-  <div class="summary-box"><h3>📌 老唐估值法 · 净利×PE ＋ SOTP 分部加总</h3><p>老唐（唐朝）估值法的逻辑：先验证三大前提（利润是真的吗 / 能持续吗 / 维持盈利要不要大量资本），再预测三年后净利，套 <span class="hl">合理估值 = 第三年净利 × 合理PE</span>，<span class="hl">五折为理想买点</span>，<span class="hl">卖点 = min(净利×50, 合理估值×1.5)</span>。腾讯属「主业＋巨额投资组合」结构，故另用 SOTP 分部加总交叉验证——主业净利先剔除应占联营利润，投资组合再单独计价，避免双重计算。<br><br><b>📅 数据基准已更新至 2026 年中报（2026-08-12 披露）</b>：基准净利改用 <b>TTM Non-GAAP 归母 2,715.65 亿</b>（＝2025 全年 2,596 − 2025H1 1,243.81 ＋ 2026H1 1,363.20）；投资组合与净现金按 2026-06-30 最新披露更新——<b>上市投资公允价值由 6,727 亿降至 4,872 亿（−27.6%）、净现金由 1,071 亿降至 582 亿</b>，非上市投资由 3,631 亿升至 3,879 亿。两个方向部分对冲：利润增长推高估值，投资组合缩水与净现金消耗拉低估值。<br><br><b>合理PE 取 20× 而非老唐常用的 25×</b>，理由：① 中国互联网平台监管风险是<b>已实际兑现过</b>的（2021 反垄断罚款、游戏版号冻结、金融科技整顿），应体现在折价而非仅体现在利润预测；② AI 资本开支回报<b>尚未验证</b>（2025 Capex 1,129 亿），25× 相当于提前给这笔投入定价成功；③ 利润增速已从 15%+ 降至低双位数。25× 更适合近乎无政策风险的生意。</p></div>
+  <div class="summary-box"><h3>📌 老唐估值法 · 净利×PE ＋ SOTP 分部加总</h3><p>老唐（唐朝）估值法的逻辑：先验证三大前提（利润是真的吗 / 能持续吗 / 维持盈利要不要大量资本），再预测三年后净利，套 <span class="hl">合理估值 = 第三年净利 × 合理PE</span>，<span class="hl">五折为理想买点</span>，<span class="hl">卖点 = min(净利×50, 合理估值×1.5)</span>。腾讯属「主业＋巨额投资组合」结构，故另用 SOTP 分部加总交叉验证——主业净利先剔除应占联营利润，投资组合再单独计价，避免双重计算。<br><br><b>📅 数据基准已更新至 2026 年三季报（2026-11 披露）</b>：基准净利改用 <b>TTM Non-GAAP 归母 2,675.33 亿</b>（＝2025 全年 2,596.26 − 2025 前三季 1,949.32 ＋ 2026 前三季 2,028.39），<b>较中报时的 2,715.65 亿下降，为本轮首次环比下滑</b>——因 Q3 Non-GAAP 归母同比 −6%。上市投资 5,054 亿、非上市 3,972 亿；<b>净现金转为净债务 −137 亿</b>（季内借款增加 812 亿，用于算力采购）。现价 HK$372.8（用户提供）。<br><br><b>⚠️ 读数前必看：</b>下方模型默认中性增速 12%，但 <b>2026 前三季 Non-GAAP 实际仅增 4%</b>。若按 4% 增速、20× PE，中性买点为 HK$367.0，现价仅高于买点 1.6%——即「深度低估」这一定位<b>几乎完全取决于增速能否回到 12%</b>。可把下方「预测年数」保持 3、在假设区改 PE 或在 SOTP 区改 CAGR 自行验证。<br><br><b>合理PE 取 20× 而非老唐常用的 25×</b>，理由：① 中国互联网平台监管风险是<b>已实际兑现过</b>的（2021 反垄断罚款、游戏版号冻结、金融科技整顿），应体现在折价而非仅体现在利润预测；② AI 资本开支回报<b>尚未验证</b>（2025 Capex 1,129 亿），25× 相当于提前给这笔投入定价成功；③ 利润增速已从 15%+ 降至低双位数。25× 更适合近乎无政策风险的生意。</p></div>
 
   <div class="lt-verdict" id="lt-verdict">
     <div><div class="lt-vm"><span class="k">当前定位（简化法·中性）</span></div><div class="tag" id="lt-tag">—</div></div>
@@ -574,11 +574,11 @@ html = f'''<!DOCTYPE html>
   <div class="chart-block">
     <h3>关键假设（改动任一数字，下方全部结果实时重算）</h3>
     <div class="lt-assume">
-      <div class="lt-field"><label>基准 Non-GAAP 归母净利 <span class="u">亿元·TTM</span></label><input type="number" step="1" id="lt-baseNP" value="2715.65"></div>
+      <div class="lt-field"><label>基准 Non-GAAP 归母净利 <span class="u">亿元·TTM</span></label><input type="number" step="1" id="lt-baseNP" value="2675.33"></div>
       <div class="lt-field"><label>总股本 <span class="u">亿股</span></label><input type="number" step="0.1" id="lt-shares" value="90.1"></div>
       <div class="lt-field"><label>汇率 1港元= <span class="u">人民币</span></label><input type="number" step="0.01" id="lt-fx" value="0.91"></div>
       <div class="lt-field"><label>合理市盈率 <span class="u">倍（保守取20×）</span></label><input type="number" step="0.5" id="lt-pe-in" value="20"></div>
-      <div class="lt-field"><label>现价 <span class="u">港元</span></label><input type="number" step="0.1" id="lt-price-in" value="461.6"></div>
+      <div class="lt-field"><label>现价 <span class="u">港元</span></label><input type="number" step="0.1" id="lt-price-in" value="372.8"></div>
       <div class="lt-field"><label>预测年数 <span class="u">年</span></label><input type="number" step="1" id="lt-years" value="3"></div>
     </div>
   </div>
@@ -595,10 +595,10 @@ html = f'''<!DOCTYPE html>
     <div class="lt-assume" style="margin-bottom:16px">
       <div class="lt-field"><label>应占联营利润 <span class="u">亿·从净利剔除</span></label><input type="number" step="10" id="lt-assoc" value="250"></div>
       <div class="lt-field"><label>核心主业三年CAGR <span class="u">%</span></label><input type="number" step="0.5" id="lt-coreCagr" value="12"></div>
-      <div class="lt-field"><label>上市投资公允价值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-listed" value="4872"></div>
-      <div class="lt-field"><label>非上市投资账面值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-unlisted" value="3879"></div>
+      <div class="lt-field"><label>上市投资公允价值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-listed" value="5054"></div>
+      <div class="lt-field"><label>非上市投资账面值 <span class="u">亿元</span></label><input type="number" step="10" id="lt-unlisted" value="3972"></div>
       <div class="lt-field"><label>投资组合折扣 <span class="u">%</span></label><input type="number" step="5" id="lt-portDisc" value="100"></div>
-      <div class="lt-field"><label>净现金 <span class="u">亿元</span></label><input type="number" step="10" id="lt-netCash" value="582"></div>
+      <div class="lt-field"><label>净现金 <span class="u">亿元</span></label><input type="number" step="10" id="lt-netCash" value="-137"></div>
     </div>
     <div class="table-scroll"><table class="data-table"><thead><tr><th>分部</th><th>金额(亿RMB)</th></tr></thead><tbody id="lt-sotp"></tbody></table></div>
     <div class="lt-note"><b>口径：</b>联营公司（拼多多、快手、富途等）的价值已计入「上市投资公允价值」，故主业净利须先<b>剔除应占联营利润</b>，二者不重复计价。投资组合按当前值计入、假设三年不增长，属保守处理（安全垫）。</div>
@@ -607,6 +607,8 @@ html = f'''<!DOCTYPE html>
   <div class="chart-block">
     <h3>③ 合理PE 敏感性——这张表比任何单一结论都重要</h3>
     <div class="table-scroll"><table class="data-table"><thead><tr><th>合理PE</th><th>中性合理/股(HK$)</th><th>中性买点/股(HK$)</th><th>现价相对买点</th><th>信号</th></tr></thead><tbody id="lt-sens"></tbody></table></div>
+    <h3 style="margin-top:20px">④ 增速 × PE 双维敏感性——中性买点 HK$（括号内为现价相对买点）</h3>
+    <div class="table-scroll"><table class="data-table"><thead><tr><th>三年 CAGR</th><th>PE 25×</th><th>PE 20×</th><th>PE 15×</th></tr></thead><tbody id="lt-sens2"></tbody></table></div>
     <div class="lt-note"><b>同一家公司、同样的利润预测，仅仅改变「愿意付多少倍市盈率」这一个主观判断，买卖信号就能从「深度低估」翻转到「明显偏贵」。</b>这正是老唐反复强调「低利率不等于该给高 PE、务必封顶保守」的原因，也是这类估值只能给区间和逻辑、给不了精确答案的根本原因。<br><br>⚠️ <b>本 Tab 所有数字均为基于主观假设的推演，不构成投资建议。</b>估值的输入（尤其合理PE、三年增速）是判断而非事实，请用自己的认知验证后再做决策。</div>
   </div>
 </div>
@@ -967,6 +969,18 @@ function ltRender() {{
     return '<tr' + cur + '><td>' + p + '×' + (Math.abs(p-s.pe)<0.01 ? '（当前）' : '') + '</td><td>' + ltFmt(fH,1) +
       '</td><td>' + ltFmt(bH,1) + '</td><td style="color:' + (rel<0?'var(--green)':'var(--red)') + '">' +
       (rel>=0?'+':'') + (rel*100).toFixed(1) + '%</td><td>' + sig + '</td></tr>';
+  }}).join('');
+
+  // 增速 × PE 双维
+  var cagrRows = [[12,'模型中性'],[8,'模型悲观'],[4,'2026前三季实际'],[0,'零增长']];
+  document.getElementById('lt-sens2').innerHTML = cagrRows.map(function(cr) {{
+    var cells = [25,20,15].map(function(p) {{
+      var b = s.baseNP * Math.pow(1+cr[0]/100, s.years) * p / s.shares / s.fx * 0.5, rel = s.price/b - 1;
+      var hit = Math.abs(p - s.pe) < 0.01 ? 'font-weight:700;' : '';
+      return '<td style="' + hit + 'color:' + (rel<0?'var(--green)':'var(--red)') + '">' + ltFmt(b,1) + '（' + (rel>=0?'+':'') + (rel*100).toFixed(1) + '%）</td>';
+    }}).join('');
+    var bg = cr[0]===4 ? ' style="background:#FFF3CD"' : '';
+    return '<tr' + bg + '><td>' + cr[0] + '%<span style="color:var(--text-secondary);font-size:11px">　' + cr[1] + '</span></td>' + cells + '</tr>';
   }}).join('');
 
   // 估值区间图

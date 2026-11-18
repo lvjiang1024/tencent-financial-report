@@ -255,15 +255,17 @@ footer{margin-top:36px;font-size:11.5px;color:var(--faint);line-height:1.7;borde
 "use strict";
 const KEY="tencent-laotang-v1";
 const DEFAULTS={
-  baseNP:2715.65, baseYear:"2026H1 TTM", shares:90.1, fx:0.91, pe:20, price:461.6, years:3,
+  baseNP:2675.33, baseYear:"2026Q3 TTM", shares:90.1, fx:0.91, pe:20, price:372.8, years:3,
   cagrOpt:15, cagrNeu:12, cagrPes:8,
-  assocProfit:250, coreCagr:12, corePE:20, listed:4872, unlisted:3879, portDiscount:100, netCash:582,
+  assocProfit:250, coreCagr:12, corePE:20, listed:5054, unlisted:3972, portDiscount:100, netCash:-137,
   track:[
     {period:"2024A",     rev:6603,    revYoY:8.3, np:2227, npYoY:41, ttm:2227, fcf:1550, res:"",     price:""},
     {period:"2025A",     rev:7517.66, revYoY:14,  np:2596, npYoY:17, ttm:2596, fcf:1826, res:10358,  price:""},
     {period:"2026Q1",    rev:1964.58, revYoY:9,   np:679.05,npYoY:11, ttm:2663, fcf:567,  res:"",     price:""},
     {period:"2026Q2",    rev:2047.85, revYoY:11,  np:684.15,npYoY:9,  ttm:2715.65, fcf:-138, res:8751, price:""},
-    {period:"2026-08-12",rev:"",      revYoY:"",  np:"",   npYoY:"", ttm:2715.65, fcf:"",   res:"",     price:461.6}
+    {period:"2026-08-12",rev:"",      revYoY:"",  np:"",   npYoY:"", ttm:2715.65, fcf:"",   res:"",     price:461.6},
+    {period:"2026Q3",    rev:2073.36, revYoY:8,   np:665.19,npYoY:-6, ttm:2675.33, fcf:-691, res:9026, price:""},
+    {period:"2026-11-18",rev:"",      revYoY:"",  np:"",   npYoY:"", ttm:2675.33, fcf:"",   res:"",     price:372.8}
   ]
 };
 let S=load();
@@ -352,7 +354,7 @@ function render(){
   renderTrack(sc);
   document.getElementById("footer").innerHTML=
     `估值口径：人民币亿元 / 股价港元；总股本按 ${S.shares} 亿股、汇率 1港元=${S.fx}人民币。`+
-    `数据来源：腾讯 2025 年报（2026-03 披露）与 2026 年中报（2026-08-12 披露）。`+
+    `数据来源：腾讯 2025 年报（2026-03 披露）与 2026 年三季报（2026-11 披露）。`+
     `合理PE在低利率环境封顶 ${S.pe}×，属保守锚而非精确值——结论对该取值高度敏感。`+
     `编辑内容仅保存在当前浏览器本地。<b>本页不构成投资建议。</b>`;
 }

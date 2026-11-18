@@ -741,6 +741,18 @@
       "eps_basic": 6.207,
       "eps_diluted": 6.104,
       "nifrs_net": 68415.0
+    },
+    {
+      "year": 2026,
+      "period_type": "Q3",
+      "source_file": "2026 Q3.pdf",
+      "revenue": 207336.0,
+      "gross": 115911.0,
+      "net_profit": 65139.0,
+      "attr_profit": 63612.0,
+      "eps_basic": 7.059,
+      "eps_diluted": 6.947,
+      "nifrs_net": 66519.0
     }
   ]
 }
